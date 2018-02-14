@@ -1,4 +1,3 @@
-<?php
 
 /**
  * @file index.php
@@ -7,8 +6,9 @@
  * @brief Prepares all the needed fixtures and fires up the main request
  * handler.
  *
- * @author Movim Project <contact@movim.eu>
+ * @author endes <endes@disroot.org>
  *
+ * Copyright (C)2018 endes
  * Copyright (C)2013 Movim Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,26 +37,50 @@
  * events-based API.
  */
 
-define('DOCUMENT_ROOT', dirname(__FILE__));
+import movim.Bootstrap;
+import movim.controller.Front;
+import movim.widget.Wrapper;
 
-require 'vendor/autoload.php';
+class Main {
+  public static var dirs : {cache : String,
+    log : String,
+    config : String,
+    users: String,
+    themes: String,
+    locales: String};
+  public static var app : {title: String,
+    name: String,
+    version: String,
+    small_picture_limit: Int};
+  public static var api : String = 'https://api.movim.eu/';
+  public static var timezone : datetime.Timezone;
+  public static var log : easylog.EasyLogger;
 
-use Movim\Bootstrap;
-use Movim\Controller\Front;
-use Movim\Widget\Wrapper;
+  public static var session_id : String;
 
-try {
-    $bootstrap = new Bootstrap;
-    $bootstrap->boot();
-} catch(Exception $e) {
-    error_log($e->getMessage());
-    echo 'Oops, something went wrong, please check the log files';
-    return;
+
+  public function new() {
+    try {
+      var bootstrap = new Bootstrap();
+      bootstrap.boot();
+    } catch(e:Dynamic) {
+      trace(e);
+      trace( 'Oops, something went wrong, please check the log files' );
+    }
+
+    var rqst = new Front();
+    rqst.handle();
+
+    Wrapper.getInstance(false);
+    // Closing stuff
+    Wrapper.destroyInstance();
+  }
+
+  macro private static function getVersion() : haxe.macro.Expr.ExprOf<String> {
+    return macro $v{sys.io.File.getContent('../VERSION')};
+  }
+
+  static function main() {
+    new Main();
+  }
 }
-
-$rqst = new Front;
-$rqst->handle();
-
-Wrapper::getInstance(false);
-// Closing stuff
-Wrapper::destroyInstance();
