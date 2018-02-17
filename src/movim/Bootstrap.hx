@@ -257,8 +257,8 @@ class Bootstrap {
         }
     }
 
-    public function getWidgets() : Void {
-        // Return a list of interesting widgets to load (to save memory)
+    public static function getWidgets() : Void {
+        //TODO: completar
         return ['Account','AccountNext','Ack','AdHoc','Avatar','Bookmark',
         'Communities','CommunityAffiliations','CommunityConfig','CommunityData',
         'CommunityHeader','CommunityPosts','CommunitiesServer','CommunitiesServers',

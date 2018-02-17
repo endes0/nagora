@@ -1,24 +1,20 @@
-namespace Movim\i18n;
+package movim.i18n;
+
+import hxIni.IniManager;
+import hxIni.IniManager.Ini;
 
 class Locale {
-    private static var _instance;
-    public var translations;
-    public var language;
-    public var hash = [];
+    private static var _instance : Locale;
+    public var translations : Map<String,String>;
+    public var language : String;
+    public var hash : Map<String,Map<String,String>> = [];
 
-    private function __construct() : Void
-    {
-        this.loadIni(
-            LOCALES_PATH + 'locales.ini',
-            true,
-            INI_SCANNER_RAW);
+    private function new() : Void {
+        this.loadIni(Main.dirs.locales + 'locales.ini');
 
-        dir = scandir(WIDGETS_PATH);
-        for(widget in dir) {
-            path = WIDGETS_PATH + widget + '/locales.ini';
-            if(sys.FileSystem.exists(path)) {
-                this.loadIni(path);
-            }
+        for(widget in Bootstrap.getWidgets()) {
+            path = 'nagora/' + widget + '/locales.ini';
+            this.loadIni(path);
         }
     }
 
@@ -26,47 +22,47 @@ class Locale {
      * @desc Load a locales ini file and merge it with hash attribute
      * @param $file The path of the fie
      */
-    private function loadIni(file)
-    {
-        this.hash = array_merge_recursive(
-            this.hash,
-            parse_ini_file(
-                file,
-                true,
-                INI_SCANNER_RAW
-            )
-        );
+    private function loadIni(file) {
+      var ini : Map<String,Map<String,String>> = IniManager.loadFromString(Main.ini_file(file));
+      for( key in ini ) {
+        if( hash[key] == null ) {
+          hash[key] = ini[key];
+        } else {
+          for( key2 in ini ) {
+            if( hash[key][key2] == null ) {
+              hash[key][key2] = ini[key][key2];
+            } else {
+              Main.log.log('Warning', 'Locale file ' + file + ' is triying to assing a value thats is assigned: ' + key + key2);
+            }
+          }
+        }
+      }
     }
 
-    public static function start() : Void
-    {
-        if(!isset(/*self.*/_instance)) {
-            /*self.*/_instance = new self();
+    public static function start() : Locale {
+        if(Locale._instance == null) {
+            Locale._instance = new Locale();
         }
 
-        return /*self.*/_instance;
+        return Locale._instance;
     }
 
     /**
      * @desc Return an array containing all the presents languages in i18n
      */
 
-    public function getList()
-    {
-        import/*('languages.php')*/;
-
-        lang_list = get_lang_list();
-        dir = scandir(LOCALES_PATH);
-        po = [];
+    public function getList() {
+        lang_list = Languages.get_lang_list();
+        var dir = sys.FileSystem.readDirectory(Main.dirs.locales);
+        var po : Map<String,String> = new Map();
         for(files in dir) {
-            explode = files.split('.');
-            if(end(explode) == 'po'
-            && lang_list.exists(explode[0])) {
+            var explode = files.split('.');
+            if(explode.pop() == 'po' && lang_list[explode[0]] != null) {
                 po[explode[0]] = lang_list[explode[0]];
             }
         }
 
-        po.set('en') = 'English';
+        po.set('en', 'English');
 
         return po;
     }
@@ -76,82 +72,69 @@ class Locale {
      * @param $key The key to translate
      * @param $args Arguments to pass to sprintf
      */
-    public function translate(key, args:Bool=false)
-    {
-        if(empty(key)) return key;
+    public function translate(key : String, args:Array<String>=false) : String {
+        if(key == null || key == '') return key;
 
-        arr = key.split('.');
-        if(is_array(this.hash)
-        && this.hash.exists(arr[0])
-        && (this.hash[arr[0]]).exists(arr[1])) {
-            skey = this.hash[arr[0]][arr[1]];
+        var arr = key.split('.');
+        if(this.hash[arr[0]] != null && this.hash[arr[0]][arr[1]] != null) {
+            var string = '';
+            var skey = this.hash[arr[0]][arr[1]];
 
             if(this.language == 'en') {
-                if(is_string(skey)) {
-                    string = skey;
-                } else {
-                    string = skey[0];
-                }
-            } elseif(is_array(this.translations)
-            && this.translations.exists(skey)
-            && isset(this.translations[skey])) {
+                var string = skey;
+            } else if(this.translations[skey] != null) {
                 string = this.translations[skey];
             } else {
                 if(this.language != 'en') {
-                    \Utils.log('Locale: Translation not found in ['+this.language+'] for "'+key+'" : "'+skey+'"');
+                    Main.log.log('Info', 'Locale: Translation not found in ['+this.language+'] for "'+key+'" : "'+skey+'"');
                 }
-                if(is_string(skey)) {
+                if(Std.is(skey, String)) {
                     string = skey;
                 } else {
-                    \Utils.log('Locale: Double definition for "'+key+'" got '+php.Lib.serialize(skey));
-                    string = skey[0];
+                    Main.log.log('Warning', 'Locale: Double definition for "'+key+'" got '+skey);
+                    //string = skey[0];
                 }
             }
 
-            if(args != false) {
+            if(args != null) { //TODO
                 args.unshift(string);
-                string = call_user_func_array("sprintf", args);
+                string = 'Not implemented'; //call_user_func_array("sprintf", args);
+                Main.log.log('Error', 'Not implemented');
             }
 
             return string;
         } else {
-            \Utils.log('Locale: Translation key "'+key+'" not found');
+          Main.log.log('Error', 'Locale: Translation key "'+key+'" not found');
+          return '';
         }
     }
 
     /**
      * @desc Auto-detects the language from the user browser
      */
-    public function detect(accepted:Bool=false)
-    {
-        langs = [];
+    public function detect(?accepted:String) : Null<String> {
+        var langs : Map<String,String> = [];
 
-        languages = (accepted != false) ? accepted : _SERVER.getset('HTTP_ACCEPT_LANGUAGE');
+        var languages = if(accepted != null) accepted else '' //TODO _SERVER.getset('HTTP_ACCEPT_LANGUAGE');
 
-        preg_match_all(
-            '/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i',
-            languages,
-            lang_parse);
+        var matcher = ~/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i
 
-        if ((lang_parse[1]).length) {
-            langs = array_combine(lang_parse[1], lang_parse[4]);
 
-            for (lang => val in langs) {
-                if (val === '') langs[lang] = 1;
-            }
-            arsort(langs, SORT_NUMERIC);
+        while (matcher.match(languages)) {
+          if(matcher.matched(4) != '') langs.set(matcher.matched(1), matcher.matched(4));
+          languages = matcher.matchedRight();
         }
 
-        while((list(key, value) = each(langs))) {
-            if(sys.FileSystem.exists(LOCALES_PATH + key + '.po')) {
+        for( key in langs.keys() ) {
+            if(sys.FileSystem.exists(Main.dirs.locales + key + '.po')) {
                 this.language = key;
                 return;
             }
 
-            exploded = key.split('-');
-            key = reset(exploded);
+            var exploded = key.split('-');
+            key = exploded[0];
 
-            if(sys.FileSystem.exists(LOCALES_PATH + key + '.po')) {
+            if(sys.FileSystem.exists(Main.dirs.locales + key + '.po')) {
                 this.language = key;
                 return;
             }
@@ -166,8 +149,7 @@ class Locale {
      * @desc Load a specific language
      * @param $language The language key to load
      */
-    public function load(language)
-    {
+    public function load(language : String) : Void {
         this.language = language;
         this.loadPo();
     }
@@ -175,42 +157,42 @@ class Locale {
     /**
      * @desc Parses a .po file based on the current language
      */
-    public function loadPo()
-    {
-        pofile = LOCALES_PATH+this.language+'.po';
+    public function loadPo() : Void {
+        var pofile = Main.dirs.locales + this.language + '.po';
         if(!sys.FileSystem.exists(pofile)) {
             return false;
         }
 
         // Parsing the file.
-        handle = fopen(pofile, 'r');
+        handle = sys.io.File.read(pofile, false);
 
-        this.translations = [];
+        this.translations = new Map();
 
-        msgid = "";
-        msgstr = "";
+        var msgid = "";
+        var msgstr = "";
 
-        last_token = "";
+        var last_token = "";
+        var comment_m = ~/#^msgctxt#/;
+        var id_m = ~/#^msgid#/;
+        var str_m = ~/#^msgstr#/;
 
-        while(line = fgets(handle)) {
-            if(line[0] == "#"
-            || (line.rtrim()).trim() == ""
-            || preg_match('#^msgctxt#', line)) {
+        while(handle.eof() == false) {
+            var line = handle.readLine();
+            if(line.substr(0, 1) == "#" || (line.rtrim()).trim() == "" || comment_m.match(line)) {
                 continue;
             }
 
-            if(preg_match('#^msgid#', line)) {
+            if(id_m.match(line)) {
                 if(last_token == "msgstr") {
                     this.translations[msgid] = msgstr;
                 }
                 last_token = "msgid";
                 msgid = this.getQuotedString(line);
             }
-            else if(preg_match('#^msgstr#', line)) {
+            else if(str_m.match(line)) {
                 last_token = "msgstr";
                 msgstr = this.getQuotedString(line);
-            }
-            else {
+            } else {
                 last_token += this.getQuotedString(line);
             }
         }
@@ -218,15 +200,18 @@ class Locale {
             this.translations[msgid] = msgstr;
         }
 
-        fclose(handle);
+        handle.close();
     }
 
-    private function getQuotedString(string) : Void
-    {
-        matches = [];
-        preg_match('#"(.+)"#', string, matches);
+    private function getQuotedString(string) : String {
+        var string_m = ~/'#"(.+)"#'/;
+        string_m.match(string);
 
-        if(isset(matches[1]))
-            return matches[1];
+        if(string_m.matches(1) != null) {
+          return string_m.matches(1);
+        } else {
+          Main.log.log('Warning', 'error getting quoted string "' + string + '", when loading a locale');
+          return ' ';
+        }
     }
 }

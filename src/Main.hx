@@ -80,6 +80,10 @@ class Main {
     return macro $v{sys.io.File.getContent('../VERSION')};
   }
 
+  macro public static function ini_file( file : String ) : ExprOf<String> {
+    return macro $v{sys.io.File.getContent(file)};
+  }
+
   static function main() {
     new Main();
   }
