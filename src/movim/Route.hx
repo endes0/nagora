@@ -97,7 +97,7 @@ class Route extends Base {
 
             return uri+tab;
         } else {
-            throw 'Route not set for the page ' + page);
+            throw 'Route not set for the page ' + page;
         }
     }
 

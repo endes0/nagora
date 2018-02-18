@@ -24,8 +24,8 @@ class User {
      */
     public function reload(language:Bool=false) {
         //TODO: db
-        sd = new \Modl\SessionxDAO;
-        session = sd.get(SESSION_ID);
+        /*sd = new \Modl\SessionxDAO;
+        session = sd.get(SESSION_ID);*/
 
         if (session != null) {
             if (language) {
@@ -37,8 +37,8 @@ class User {
             }
 
             //TODO: db
-            cd = new \Modl\CapsDAO;
-            caps = cd.get(session.host);
+            /*cd = new \Modl\CapsDAO;
+            caps = cd.get(session.host);*/
             if (caps) {
                 this.caps = caps.features;
             }
@@ -82,7 +82,7 @@ class User {
 
     public function setConfig(config : Map<String,String>) : Void {
         //TODO: db
-        s = new \Modl\Setting;
+        //s = new \Modl\Setting;
 
         if (config.get('language') != null) {
             s.language = config.get('language');
@@ -101,8 +101,8 @@ class User {
         }
 
         //TODO: db
-        sd = new \Modl\SettingDAO;
-        sd.set(s);
+        /*sd = new \Modl\SettingDAO;
+        sd.set(s);*/
 
         this.createDir();
 
@@ -114,8 +114,8 @@ class User {
 
     public function getConfig(?key:String) : Dynamic {
         //TODO: db
-        sd = new \Modl\SettingDAO;
-        s = sd.get();
+        /*sd = new \Modl\SettingDAO;
+        s = sd.get();*/
 
         if (key == null) {
             return s;
@@ -157,7 +157,7 @@ class User {
                     return this.caps.indexOf('http://jabber.org/protocol/pubsub#persistent-items') != -1;
                 case 'upload':
                     //TODO: db
-                    cd = new \Modl\CapsDAO;
+                    //cd = new \Modl\CapsDAO;
                     return (cd.getUpload(this.getServer()) != null);
                 default:
                     return false;

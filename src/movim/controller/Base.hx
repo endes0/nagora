@@ -9,7 +9,7 @@ class Base {
     public var unique : Bool = false;         // Only one WS for this page
     var session_only(default,null) : Bool = false;// The page is protected by a session ?
     var raw(default,null) : Bool = false;         // Display only the content ?
-    var public(default,null) : Bool = false;      // It's a public page
+    var _public(default,null) : Bool = false;      // It's a public page
     var page(default,null) : Builder;
 
     public function new() : Void {
@@ -64,7 +64,7 @@ class Base {
         this.page.addScript('movim_base.js');
         this.page.addScript('movim_electron.js');
 
-        if (!this.public) {
+        if (!this._public) {
             this.page.addScript('movim_tpl.js');
             this.page.addScript('movim_websocket.js');
         }
@@ -73,13 +73,13 @@ class Base {
         var content = new Builder(user);
 
         if (this.raw) { //TODO: display
-            echo content.build(this.name);
+            //echo content.build(this.name);
         } else {
             var built = content.build(this.name);
             this.page.setContent(built);
 
             //TODO: display
-            echo this.page.build('page', this.public);
+            //echo this.page.build('page', this._public);
         }
     }
 }

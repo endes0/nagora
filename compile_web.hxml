@@ -1,0 +1,10 @@
+dependencies.hxml
+-lib hxnodejs
+
+-cp nagora/
+-cp src/
+
+-dce std
+--macro movim.widget.Wrapper.import_all()
+-main Main
+-js bin/app.js

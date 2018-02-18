@@ -46,7 +46,7 @@ class Front extends Base {
      * Here we load, instanciate and execute the correct controller
      */
     public function runRequest(request : String) : Void {
-        if(request === 'ajax') {
+        if(request == 'ajax') {
             var req = new haxe.Http('http://localhost:1560/ajax/');
             req.addParameter('sid', Main.session_id);
             req.addParameter('json', null); //TODO

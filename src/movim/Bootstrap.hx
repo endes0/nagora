@@ -121,26 +121,25 @@ class Bootstrap {
         Main.dirs.config ='config/';
     }
 
-    private function loadCommonLibraries() : Void
-    {
+    /* private function loadCommonLibraries() : Void {
         // XMPPtoForm lib
         import /*LIB_PATH . 'XMPPtoForm.php'*/;
 
         // SDPtoJingle and JingletoSDP lib :)
-        import /*LIB_PATH . 'SDPtoJingle.php'*/;
-        import /*LIB_PATH . 'JingletoSDP.php'*/;
-    }
+        /* import LIB_PATH . 'SDPtoJingle.php';
+        import LIB_PATH . 'JingletoSDP.php';
+    } */
 
-    private function loadHelpers() : Void {
+    /*private function loadHelpers() : Void {
         for (file in glob(HELPERS_PATH + '*Helper.php')) {
             require file;
         }
-    }
+    }*/
 
-    private function loadDispatcher() : Void
+    /*private function loadDispatcher() : Void
     {
-        import /*APP_PATH . 'widgets/Notification/Notification.php'*/;
-    }
+        import APP_PATH . 'widgets/Notification/Notification.php';
+    }*/
 
     /**
      * Loads up the language, either from the User or default.
@@ -149,8 +148,8 @@ class Bootstrap {
         var user = new User();
 
         //TODO: db
-        cd = new \Modl\ConfigDAO;
-        config = cd.get();
+        //cd = new \Modl\ConfigDAO;
+        //config = cd.get();
 
         var l = movim.i18n.Locale.start();
 
@@ -179,7 +178,7 @@ class Bootstrap {
     private function loadModl() : Void {
       //TODO: db
         // We load Movim Data Layer
-        db = \Modl\Modl.getInstance();
+        /*db = \Modl\Modl.getInstance();
         db.setModelsPath(APP_PATH+'models');
 
         \Modl\Utils.loadModel('Config');
@@ -209,21 +208,21 @@ class Bootstrap {
         }
 
         db.setConnectionArray(conf);
-        db.connect();
+        db.connect();*/
 
         return true;
     }
 
     private function startingSession() : Void {
-        if (Main.session_id !== null) {
+        if (Main.session_id != null) {
             var req = new haxe.Http('http://localhost:1560/exists/');
             req.addParameter('sid', Main.session_id);
             req.onData = function( d : String ) : Void {
               var process : Bool = if(d = 'true') true else false;
 
               //TODO: db
-              var sd = new \Modl\SessionxDAO;
-              var session = sd.get(Main.session_id);
+              /*var sd = new \Modl\SessionxDAO;
+              var session = sd.get(Main.session_id); */
 
               if (session != null) {
                   // There a session in the DB but no process

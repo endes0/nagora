@@ -13,7 +13,7 @@ class Locale {
         this.loadIni(Main.dirs.locales + 'locales.ini');
 
         for(widget in Bootstrap.getWidgets()) {
-            path = 'nagora/' + widget + '/locales.ini';
+            path = 'app/' + widget + '/locales.ini';
             this.loadIni(path);
         }
     }
@@ -115,9 +115,9 @@ class Locale {
     public function detect(?accepted:String) : Null<String> {
         var langs : Map<String,String> = [];
 
-        var languages = if(accepted != null) accepted else '' //TODO _SERVER.getset('HTTP_ACCEPT_LANGUAGE');
+        var languages = if(accepted != null) accepted else ''; //TODO _SERVER.getset('HTTP_ACCEPT_LANGUAGE');
 
-        var matcher = ~/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i
+        var matcher = ~/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i;
 
 
         while (matcher.match(languages)) {
