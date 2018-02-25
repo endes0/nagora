@@ -10,15 +10,15 @@
                                 <i class="zmdi zmdi-arrow-left"></i>
                             </a>
                         </span>
-                        <p class="center"><?php echo __('page.administration'); ?></p>
+                        <p class="center"><?php this.echo(Locale.start().translate('page.administration')); ?></p>
                     </li>
                 </ul>
             </header>
-            <?php $this->widget('Tabs');?>
-            <?php $this->widget('AdminTest');?>
-            <?php $this->widget('AdminMain');?>
-            <?php $this->widget('Statistics');?>
-            <?php $this->widget('Api');?>
+            <?hhp this.widget('Tabs');?>
+            <?hhp this.widget('AdminTest');?>
+            <?hhp this.widget('AdminMain');?>
+            <?hhp this.widget('Statistics');?>
+            <?hhp this.widget('Api');?>
         </div>
     </section>
 </main>

@@ -5,19 +5,19 @@
                 <ul class="list middle">
                     <li>
                         <span class="primary active icon gray">
-                            <a href="<?php echo \Movim\Route::urlize('main'); ?>">
+                            <a href="<?hhp this.echo(movim.Route.urlize('main')); ?>">
                                 <i class="zmdi zmdi-arrow-left"></i>
                             </a>
                         </span>
-                        <p class="center"><?php echo __('page.about'); ?></p>
+                        <p class="center"><?php this.echo(Locale.start().translate('page.about')); ?></p>
                     </li>
                 </ul>
             </header>
-            <?php $this->widget('Tabs');?>
+            <?hhp this.widget('Tabs');?>
 
-            <?php $this->widget('About');?>
-            <?php $this->widget('Help');?>
-            <?php $this->widget('Caps');?>
+            <?hhp this.widget('About');?>
+            <?hhp this.widget('Help');?>
+            <?hhp this.widget('Caps');?>
         </div>
     </section>
 </main>

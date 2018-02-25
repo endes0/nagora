@@ -1,7 +1,7 @@
 <main>
     <section>
         <div>
-            <?php $this->widget('Share');?>
+            <?hhp this.widget('Share');?>
         </div>
     </section>
 </main>

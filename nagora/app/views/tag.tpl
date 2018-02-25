@@ -1,23 +1,23 @@
-<?php if($this->user->isLogged()) { ?>
-    <?php $this->widget('Search');?>
-    <?php $this->widget('Notification');?>
-    <?php $this->widget('VisioLink');?>
+<?hhp if(this.user.isLogged()) { ?>
+    <?hhp this.widget('Search');?>
+    <?hhp this.widget('Notification');?>
+    <?hhp this.widget('VisioLink');?>
 
     <nav class="color dark">
-        <?php $this->widget('Presence');?>
-        <?php $this->widget('Navigation');?>
+        <?hhp this.widget('Presence');?>
+        <?hhp this.widget('Navigation');?>
     </nav>
 <?php } ?>
 
 <main style="background-color: var(--movim-background);">
     <section>
-        <?php if($this->user->isLogged()) { ?>
+        <?hhp if(this.user.isLogged()) { ?>
             <aside>
-                <?php $this->widget('NewsNav');?>
+                <?hhp this.widget('NewsNav');?>
             </aside>
-        <?php } ?>
+        <?hhp } ?>
         <div>
-            <?php $this->widget('Blog');?>
+            <?hhp this.widget('Blog');?>
         </div>
     </section>
 </main>

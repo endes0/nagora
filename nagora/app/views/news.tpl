@@ -1,28 +1,28 @@
-<?php $this->widget('Init');?>
-<?php $this->widget('VisioLink');?>
-<?php $this->widget('Notification');?>
-<?php $this->widget('Upload');?>
-<?php $this->widget('Search');?>
-<?php $this->widget('Onboarding');?>
+<?hhp this.widget('Init');?>
+<?hhp this.widget('VisioLink');?>
+<?hhp this.widget('Notification');?>
+<?hhp this.widget('Upload');?>
+<?hhp this.widget('Search');?>
+<?hhp this.widget('Onboarding');?>
 
-<?php $this->widget('PostActions');?>
+<?hhp this.widget('PostActions');?>
 
 <nav class="color dark">
-    <?php $this->widget('Presence');?>
-    <?php $this->widget('Navigation');?>
+    <?hhp this.widget('Presence');?>
+    <?hhp this.widget('Navigation');?>
 </nav>
 
-<?php $this->widget('BottomNavigation');?>
+<?hhp this.widget('BottomNavigation');?>
 
 <main>
     <section style="background-color: var(--movim-background);">
         <aside>
-            <?php $this->widget('Notifs');?>
-            <?php $this->widget('NewsNav');?>
+            <?hhp this.widget('Notifs');?>
+            <?hhp this.widget('NewsNav');?>
         </aside>
         <div>
-        <?php $this->widget('PublishBrief');?>
-        <?php $this->widget('Menu');?>
+        <?hhp this.widget('PublishBrief');?>
+        <?hhp this.widget('Menu');?>
         </div>
     </section>
 </main>

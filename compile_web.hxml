@@ -1,10 +1,13 @@
 dependencies.hxml
--lib hxnodejs
+#-lib hxnodejs
 
 -cp nagora/
 -cp src/
 
 -dce std
 --macro movim.widget.Wrapper.import_all()
+--macro movim.controller.Front.import_all()
+--macro hhp.Hhp.basePath('nagora/app/views')
 -main Main
--js bin/app.js
+#-js bin/app.js
+-neko bin/app.n

@@ -1,7 +1,7 @@
 <main>
     <section>
         <div>
-            <?php $this->widget('NotFound');?>
+            <?hhp this.widget('NotFound');?>
         </div>
     </section>
 </main>

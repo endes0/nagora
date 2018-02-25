@@ -1,1 +1,1 @@
-<?php $this->widget('Syndication');?>
+<?php this.widget('Syndication');?>

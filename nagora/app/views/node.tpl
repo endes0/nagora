@@ -1,7 +1,7 @@
 <main>
     <section>
         <div style="background-color: var(--movim-background);">
-            <?php $this->widget('Blog');?>
+            <?hhp this.widget('Blog');?>
             <ul class="list">
                 <li>
                     <span class="primary icon gray">

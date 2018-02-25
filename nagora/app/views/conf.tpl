@@ -1,11 +1,11 @@
-<?php $this->widget('Search');?>
-<?php $this->widget('VisioLink');?>
-<?php $this->widget('Notification');?>
-<?php $this->widget('Onboarding');?>
+<?hhp this.widget('Search');?>
+<?hhp this.widget('VisioLink');?>
+<?hhp this.widget('Notification');?>
+<?hhp this.widget('Onboarding');?>
 
 <nav class="color dark">
-    <?php $this->widget('Presence');?>
-    <?php $this->widget('Navigation');?>
+    <?hhp this.widget('Presence');?>
+    <?hhp this.widget('Navigation');?>
 </nav>
 
 <main>
@@ -18,19 +18,19 @@
                             <i class="zmdi zmdi-menu on_mobile" onclick="MovimTpl.toggleMenu()"></i>
                             <i class="zmdi zmdi-settings on_desktop"></i>
                         </span>
-                        <p class="center"><?php echo __('page.configuration'); ?></p>
+                        <p class="center"><?php this.echo(Locale.start().translate('page.configuration')); ?></p>
                     </li>
                 </ul>
             </header>
 
-            <?php $this->widget('Tabs');?>
-            <?php $this->widget('Vcard4');?>
-            <?php if($this->user->isSupported('pubsub')) { ?>
-                <?php $this->widget('Avatar');?>
-                <?php $this->widget('Config');?>
-            <?php } ?>
-            <?php $this->widget('Account');?>
-            <?php $this->widget('AdHoc');?>
+            <?hhp this.widget('Tabs');?>
+            <?hhp this.widget('Vcard4');?>
+            <?hhp if(this.user.isSupported('pubsub')) { ?>
+                <?hhp this.widget('Avatar');?>
+                <?hhp this.widget('Config');?>
+            <?hhp } ?>
+            <?hhp this.widget('Account');?>
+            <?hhp this.widget('AdHoc');?>
         </div>
     </section>
 </main>

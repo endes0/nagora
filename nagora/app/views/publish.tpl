@@ -1,20 +1,20 @@
-<?php $this->widget('Search');?>
-<?php $this->widget('Notification');?>
-<?php $this->widget('VisioLink');?>
-<?php $this->widget('Upload'); ?>
+<?hhp this.widget('Search');?>
+<?hhp this.widget('Notification');?>
+<?hhp this.widget('VisioLink');?>
+<?hhp this.widget('Upload'); ?>
 
 <nav class="color dark">
-    <?php $this->widget('Presence');?>
-    <?php $this->widget('Navigation');?>
+    <?hhp this.widget('Presence');?>
+    <?hhp this.widget('Navigation');?>
 </nav>
 
 <main>
     <section style="background-color: var(--movim-background);">
        <aside>
-            <?php $this->widget('PublishHelp');?>
+            <?hhp this.widget('PublishHelp');?>
         </aside>
         <div>
-            <?php $this->widget('PublishBrief');?>
+            <?hhp this.widget('PublishBrief');?>
         </div>
     </section>
 </main>

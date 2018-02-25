@@ -1,4 +1,4 @@
-<?php $this->widget('Notification');?>
+<?hhp this.widget('Notification');?>
 <main>
     <section>
         <div>
@@ -10,11 +10,11 @@
                                 <i class="zmdi zmdi-arrow-left"></i>
                             </a>
                         </span>
-                        <p class="center"><?php echo __('page.account_creation'); ?></p>
+                        <p class="center"><?hhp this.echo(Locale.start().translate('page.account_creation')); ?></p>
                     </li>
                 </ul>
             </header>
-            <?php $this->widget('AccountNext');?>
+            <?hhp this.widget('AccountNext');?>
         </div>
     </section>
 </main>

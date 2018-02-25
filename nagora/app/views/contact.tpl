@@ -1,37 +1,37 @@
-<?php $this->widget('Notification');?>
-<?php $this->widget('Search');?>
-<?php $this->widget('VisioLink');?>
-<?php $this->widget('PostActions');?>
-<?php $this->widget('ContactActions');?>
+<?hhp this.widget('Notification');?>
+<?hhp this.widget('Search');?>
+<?hhp this.widget('VisioLink');?>
+<?hhp this.widget('PostActions');?>
+<?hhp this.widget('ContactActions');?>
 
 <nav class="color dark">
-    <?php $this->widget('Presence');?>
-    <?php $this->widget('Navigation');?>
+    <?hhp this.widget('Presence');?>
+    <?hhp this.widget('Navigation');?>
 </nav>
 
-<?php $this->widget('BottomNavigation');?>
+<?hhp this.widget('BottomNavigation');?>
 
 <main>
     <section style="background-color: var(--movim-background);">
         <?php if(empty($_GET['s'])) { ?>
             <aside>
-                <?php $this->widget('ContactDisco');?>
+                <?hhp this.widget('ContactDisco');?>
             </aside>
             <div>
-                <?php $this->widget('Invitations');?>
-                <?php $this->widget('Tabs');?>
+                <?hhp this.widget('Invitations');?>
+                <?hhp this.widget('Tabs');?>
 
-                <?php $this->widget('Roster');?>
-                <?php $this->widget('ContactDiscoPosts');?>
+                <?hhp this.widget('Roster');?>
+                <?hhp this.widget('ContactDiscoPosts');?>
             </div>
         <?php } else { ?>
             <aside>
-                <?php $this->widget('ContactData'); ?>
-                <?php $this->widget('AdHoc'); ?>
+                <?hhp this.widget('ContactData'); ?>
+                <?hhp this.widget('AdHoc'); ?>
             </aside>
             <div>
-                <?php $this->widget('ContactHeader'); ?>
-                <?php $this->widget('CommunityPosts'); ?>
+                <?hhp this.widget('ContactHeader'); ?>
+                <?hhp this.widget('CommunityPosts'); ?>
             </div>
         <?php } ?>
     </section>

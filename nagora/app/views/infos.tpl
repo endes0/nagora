@@ -1,1 +1,1 @@
-<?php $this->widget('Infos');?>
+<?hhp this.widget('Infos');?>

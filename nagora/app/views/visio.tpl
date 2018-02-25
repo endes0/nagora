@@ -1,1 +1,1 @@
-<?php $this->widget('Visio');?>
+<?hhp this.widget('Visio');?>

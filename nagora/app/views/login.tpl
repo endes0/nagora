@@ -1,9 +1,9 @@
-<?php $this->widget('Notification');?>
+<?hhp this.widget('Notification');?>
 
 <main>
     <section>
         <div>
-            <?php $this->widget('Login'); ?>
+            <?hhp this.widget('Login'); ?>
         </div>
     </section>
 </main>

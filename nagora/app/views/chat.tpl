@@ -1,23 +1,22 @@
-<?php $this->widget('Search');?>
-<?php $this->widget('Notification');?>
-<?php $this->widget('VisioLink');?>
-<?php $this->widget('Stickers');?>
+<?hhp this.widget('Search');?>
+<?hhp this.widget('Notification');?>
+<?hhp this.widget('VisioLink');?>
+<?hhp this.widget('Stickers');?>
 
 <nav class="color dark">
-    <?php $this->widget('Presence');?>
-    <?php $this->widget('Navigation');?>
+    <?hhp this.widget('Presence');?>
+    <?hhp this.widget('Navigation');?>
 </nav>
 
-<?php $this->widget('BottomNavigation');?>
+<?hhp this.widget('BottomNavigation');?>
 
 <main>
     <section>
         <div>
-            <?php $this->widget('Chats');?>
-            <?php $this->widget('Rooms');?>
+            <?hhp this.widget('Chats');?>
+            <?hhp this.widget('Rooms');?>
         </div>
-        <?php $this->widget('Upload');?>
-        <?php $this->widget('Chat');?>
+        <?hhp this.widget('Upload');?>
+        <?hhp this.widget('Chat');?>
     </section>
 </main>
-

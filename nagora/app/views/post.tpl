@@ -1,19 +1,19 @@
-<?php $this->widget('Init');?>
-<?php $this->widget('VisioLink');?>
-<?php $this->widget('Notification');?>
-<?php $this->widget('Upload');?>
-<?php $this->widget('Search');?>
+<?hhp this.widget('Init');?>
+<?hhp this.widget('VisioLink');?>
+<?hhp this.widget('Notification');?>
+<?hhp this.widget('Upload');?>
+<?hhp this.widget('Search');?>
 
-<?php $this->widget('ContactActions');?>
-<?php $this->widget('PostActions');?>
+<?hhp this.widget('ContactActions');?>
+<?hhp this.widget('PostActions');?>
 
 <nav class="color dark">
-    <?php $this->widget('Presence');?>
-    <?php $this->widget('Navigation');?>
+    <?hhp this.widget('Presence');?>
+    <?hhp this.widget('Navigation');?>
 </nav>
 
 <main>
     <section>
-        <?php $this->widget('Post');?>
+        <?hhp this.widget('Post');?>
     </section>
 </main>
