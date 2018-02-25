@@ -36,31 +36,33 @@ class Route extends Base {
                 'tag'           => ['t', 'i'],
                 'visio'         => ['f', 's'],
             ];
+
+            super();
     }
 
     public function find() : String { //TODO
-        this.fix(/*$_GET*/php.Web.getParams(), _SERVER.get('QUERY_STRING'));
+        /*this.fix(php.Web.getParams(), _SERVER.get('QUERY_STRING'));
 
-        gets = /*$_GET*/php.Web.getParams().keys();
+        gets = php.Web.getParams().keys();
         uri = gets[0];
-        /*$_GET*/php.Web.getParams()[uri] = null;
-        request = uri.split('/');
+        php.Web.getParams()[uri] = null;
+        request = uri.split('/'); */
 
-        this._page = request.shift();
+        this._page = ''; //request.shift();
 
         if (this._routes[this._page] != null) {
-            route = this._routes[this._page];
+            var route = this._routes[this._page];
         }
 
-        if (request.length > 0 && route.length > 0) {
+        /*if (request.length > 0 && route.length > 0) {
             i = 0;
             for (key in route) {
                 if (request[i] != null) {
-                    /*$_GET*/php.Web.getParams()[key] = request[i];
+                    php.Web.getParams()[key] = request[i];
                 }
                 i++;
             }
-        }
+        }*/
 
         if (this._page == null || this._page == 'main') {
             this._page = 'news';
@@ -77,7 +79,7 @@ class Route extends Base {
         var r = new Route();
         var routes = r._routes;
 
-        if(page == 'root') return BASE_URI; //TODO
+        if(page == 'root') return ''; //TODO BASE_URI;
 
         if (routes[page] != null) {
             var uri = '';
@@ -86,7 +88,7 @@ class Route extends Base {
                 tab = '#'+tab;
             } else {
                 //We construct a classic URL if the rewriting is disabled
-                uri = BASE_URI + '?'+ page; //TODO
+                uri = /*BASE_URI + */'?'+ page; //TODO
             }
 
             if (params != null && params.length > 0) {
@@ -103,11 +105,10 @@ class Route extends Base {
 
     private function fix(source : String, discard:Bool=true) : Map<String,String> {
         var result : Map<String,String> = new Map();
-        if (discard) target = [];
 
         var p = ~/(^|(?<=&))[^=([&])+/;
         while (p.match(source)) {
-          result.set(p.matched(1), p.matched(2));
+          result.set(StringTools.urlDecode(p.matched(1)), StringTools.urlDecode(p.matched(2)));
           source = p.matchedRight();
         }
 

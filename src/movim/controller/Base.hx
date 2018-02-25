@@ -22,13 +22,13 @@ class Base {
      * @param  name is the desired variable's name.
      * @return the value of the requested variable, or FALSE.
      */
-    private function fetchGet(name) : String { //TODO
-        if (/*$_GET*/php.Web.getParams()[name] != null) {
-            return /*$_GET*/php.Web.getParams()[name];
+    /*private function fetchGet(name) : String { //TODO
+        if (php.Web.getParams()[name] != null) {
+            return php.Web.getParams()[name];
         } else {
             return null;
         }
-    }
+    }/*
 
     /**
      * Returns the value of a $_POST variable. Mainly used to avoid getting
@@ -36,13 +36,13 @@ class Base {
      * @param  name is the desired variable's name.
      * @return the value of the requested variable, or FALSE.
      */
-    private function fetchPost(name) : String {
-      if (/*$_GET*/php.Web.getParams()[name] != null) {
-          return /*$_GET*/php.Web.getParams()[name];
+    /*private function fetchPost(name) : String {
+      if (php.Web.getParams()[name] != null) {
+          return php.Web.getParams()[name];
       } else {
           return null;
       }
-    }
+    }*/
 
     public function checkSession() : Void {
         if (this.session_only) {
@@ -54,9 +54,9 @@ class Base {
         }
     }
 
-    public function redirect(page : String, params:Bool=false) : Void { //TODO
+    public function redirect(page : String, ?params:Array<String>) : Void { //TODO
         var url = Route.urlize(page, params);
-        php.Web.setHeader('Location: '+ url);
+        //php.Web.setHeader('Location: '+ url);
     }
 
     public function display() : Void {

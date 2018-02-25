@@ -71,17 +71,24 @@ class Main {
     var rqst = new Front();
     rqst.handle();
 
-    Wrapper.getInstance(false);
+    Wrapper.getInstance();
     // Closing stuff
     Wrapper.destroyInstance();
   }
 
-  macro private static function getVersion() : haxe.macro.Expr.ExprOf<String> {
-    return macro $v{sys.io.File.getContent('../VERSION')};
+  macro public static function getVersion() : ExprOf<String> {
+    return macro $v{sys.io.File.getContent('./VERSION')};
   }
 
-  macro public static function ini_file( file : String ) : ExprOf<String> {
-    return macro $v{sys.io.File.getContent(file)};
+  macro public static function ini_file( file : ExprOf<String> ) : ExprOf<String> {
+    var str = switch(file.expr) {
+           case EConst(CString(str)):
+               str;
+           default:
+               trace( file.expr );
+               throw "type should be string const";
+       }
+    return macro $v{sys.io.File.getContent(str)};
   }
 
   static function main() {

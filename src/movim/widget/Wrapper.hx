@@ -42,6 +42,8 @@ class Wrapper {
         return Wrapper.instance;
     }
 
+    public function new() {}
+
     static public function destroyInstance() : Void {
         if(Wrapper.instance != null) {
             Wrapper.instance = null;
@@ -62,8 +64,9 @@ class Wrapper {
      * @param $register know if we are loading in the daemon or displaying
      */
     public function loadWidget(name : String, register:Bool=false) : Base {
+        var class_name : Class<Dynamic> = null;
         if(Type.resolveClass('app.widgets.' + name) != null) {
-            var class_name = Type.resolveClass('app.widgets.' + name);
+            class_name = Type.resolveClass('app.widgets.' + name);
         } else {
             throw 'error.widget_load_error' + name;
         }
@@ -98,11 +101,10 @@ class Wrapper {
                 if(widget.image != null) this.image = widget.image;
                 if(widget.description != null) this.description = widget.description;
                 if(widget.url != null) this.url = widget.url;
-                if(widget.links != null) this.links += widget.links;
+                if(widget.links != null) this.links = this.links.concat(widget.links);
             }
-
-            return widget;
         }
+        return widget;
     }
 
     /**
@@ -147,7 +149,7 @@ class Wrapper {
                               Reflect.callMethod(widget, Reflect.field(widget, method), [data]);
                             } else {
                                 var explode = notifs_key.split('|');
-                                notif_key = explode[0];
+                                var notif_key = explode[0];
                                 if(notif_key == widget.filters[method]) {
                                   Reflect.callMethod(widget, Reflect.field(widget, method), [data]);
                                 }

@@ -5,6 +5,8 @@ import easylog.EasyLogger;
 
 class Bootstrap {
 
+    public function new() : Void {}
+
     public function boot() : Void {
         //define all needed constants
         this.setConstants();
@@ -17,14 +19,14 @@ class Bootstrap {
         //Check if vital system need is OK
         this.checkSystem();
 
-        this.loadCommonLibraries();
+        /*this.loadCommonLibraries();
         this.loadDispatcher();
-        this.loadHelpers();
+        this.loadHelpers();*/
 
         var loadmodlsuccess : Bool = this.loadModl();
 
         this.setTimezone();
-        this.setLogLevel();
+        //this.setLogLevel();
 
         if (loadmodlsuccess) {
             this.startingSession();
@@ -65,14 +67,14 @@ class Bootstrap {
             errors.push('Couldn\'t create directory config:' + e);
           }
         }
-        if (!sys.FileSystem.exists(Main.dirs.user)) {
+        if (!sys.FileSystem.exists(Main.dirs.users)) {
           try {
-            sys.FileSystem.createDirectory(Main.dirs.user);
+            sys.FileSystem.createDirectory(Main.dirs.users);
           } catch(e:Dynamic) {
             errors.push('Couldn\'t create directory users:' + e);
           }
         } else {
-          sys.io.File.write(Main.dirs.user + '/index.html').close();
+          sys.io.File.write(Main.dirs.users + '/index.html').close();
         }
 
         if (errors.length > 0) {
@@ -107,14 +109,14 @@ class Bootstrap {
         Main.app.small_picture_limit = 320000;
 
         //TODO: config storage
-        if (isset(_COOKIE.get('MOVIM_SESSION_ID'))) {
+        /*if (isset(_COOKIE.get('MOVIM_SESSION_ID'))) {
             define('SESSION_ID',    _COOKIE.get('MOVIM_SESSION_ID'));
         } else {
             define('SESSION_ID',    getenv('sid'));
-        }
+        }*/
 
         Main.dirs.themes = 'themes/';
-        Main.dirs.user = 'users/';
+        Main.dirs.users = 'users/';
         Main.dirs.locales = 'locales/';
         Main.dirs.cache = 'cache/';
         Main.dirs.log = 'log/';
@@ -153,17 +155,18 @@ class Bootstrap {
 
         var l = movim.i18n.Locale.start();
 
+        var lang = null;
         if (user.isLogged()) {
           var lang = user.getConfig('language');
         }
 
         if (lang != null) {
             l.load(lang);
-        } else if (Sys.enviroment['language'] != null) {
-            l.detect(Sys.enviroment['language']);
+        } else if (Sys.environment()['language'] != null) {
+            l.detect(Sys.environment()['language']);
             l.loadPo();
         } else {
-            l.load(config.locale);
+            //db l.load(config.locale);
         }
     }
 
@@ -175,7 +178,7 @@ class Bootstrap {
       Main.timezone = datetime.Timezone.local();
     }
 
-    private function loadModl() : Void {
+    private function loadModl() : Bool {
       //TODO: db
         // We load Movim Data Layer
         /*db = \Modl\Modl.getInstance();
@@ -218,22 +221,23 @@ class Bootstrap {
             var req = new haxe.Http('http://localhost:1560/exists/');
             req.addParameter('sid', Main.session_id);
             req.onData = function( d : String ) : Void {
-              var process : Bool = if(d = 'true') true else false;
+              var process : Bool = if(d == 'true') true else false;
 
               //TODO: db
               /*var sd = new \Modl\SessionxDAO;
               var session = sd.get(Main.session_id); */
+              var session = null;
 
               if (session != null) {
                   // There a session in the DB but no process
                   if (!process) {
-                      sd.delete(SESSION_ID);
+                      //db sd.delete(SESSION_ID);
                       return;
                   }
 
                   //TODO: db
-                  var db = Modl.Modl.getInstance();
-                  db.setUser(session.jid);
+                  /*var db = Modl.Modl.getInstance();
+                  db.setUser(session.jid);*/
 
                   var s = Session.start();
                   s.set('jid', session.jid);
@@ -256,7 +260,7 @@ class Bootstrap {
         }
     }
 
-    public static function getWidgets() : Void {
+    public static function getWidgets() : Array<String> {
         //TODO: completar
         return ['Account','AccountNext','Ack','AdHoc','Avatar','Bookmark',
         'Communities','CommunityAffiliations','CommunityConfig','CommunityData',

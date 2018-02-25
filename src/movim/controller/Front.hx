@@ -1,7 +1,7 @@
 package movim.controller;
 
 import movim.Route;
-import nagora.app.*;
+import app.controllers.*;
 
 class Front extends Base {
     public function handle() : Void {
@@ -9,9 +9,14 @@ class Front extends Base {
         this.runRequest(r.find());
     }
 
+    macro public static function import_all() : Void {
+      haxe.macro.Compiler.include('app.controllers');
+      haxe.macro.Compiler.keep('app.controllers');
+    }
+
     public function loadController(request:String) : Base {
       switch request {
-      case 'about': return new AboutController();
+      /*case 'about': return new AboutController();
       case 'account': return new AccountController();
       case 'accountnext': return new AccountnextController();
       case 'admin': return new AdminController();
@@ -36,8 +41,10 @@ class Front extends Base {
       case 'share': return new ShareController();
       case 'system': return new SystemController();
       case 'tag': return new TagController();
-      case 'visio': return new VisioController();
-      case _: Main.log.log('Error', "Requested controller " + request + "Controller doesn't exist.");
+      case 'visio': return new VisioController(); */
+      case _:
+        Main.log.log('Error', "Requested controller " + request + "Controller doesn't exist.");
+        throw 'Error loading Controller, see logs.';
       }
 
     }
@@ -51,7 +58,7 @@ class Front extends Base {
             req.addParameter('sid', Main.session_id);
             req.addParameter('json', null); //TODO
             req.onError = function( e:String ) : Void {
-              Main.log.log(EasyLogger.Warning, "Error on ajax request to daemon: " + e);
+              Main.log.log(easylog.EasyLogger.Warning, "Error on ajax request to daemon: " + e);
             }
             req.request(true);
             return;
@@ -61,25 +68,27 @@ class Front extends Base {
 
         //Cookie.refresh();
 
-        if (Reflect.hasfield(c, 'load')) {
+        if (Reflect.hasField(c, 'load')) {
             c.name = request;
-            c.load();
+            //TODO c.load();
+            Reflect.callMethod(c, Reflect.field(c, 'load'), []);
             c.checkSession();
-            c.dispatch();
+            //TODO c.dispatch();
+            Reflect.callMethod(c, Reflect.field(c, 'dispatch'), []);
 
             // If the controller ask to display a different page
             if (request != c.name) {
                 var new_name = c.name;
                 c = this.loadController(new_name);
                 c.name = new_name;
-                c.load();
-                c.dispatch();
+                Reflect.callMethod(c, Reflect.field(c, 'load'), []);
+                Reflect.callMethod(c, Reflect.field(c, 'dispatch'), []);
             }
 
             // We display the page !
             c.display();
         } else {
-          Main.log.log(EasyLogger.Error, "Could not call the load method on the current controller");
+          Main.log.log(easylog.EasyLogger.Error, "Could not call the load method on the current controller");
         }
     }
 }

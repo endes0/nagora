@@ -1,13 +1,12 @@
 package movim.controller;
 
 class Ajax extends Base {
-    private var funclist : Map<String,Map<String,String>> = new Map();
+    private var funclist : Map<String,{params: Array<String>, object: String, funcname: String, http: Bool}> = new Map();
     private static var instance : Ajax;
-    private var widgetlist = [];
+    private var widgetlist : Array<String> = [];
 
-    public function __construct() : Void
-    {
-        super.new();
+    public function new() : Void {
+        super();
     }
 
     public static function getInstance() : Ajax {
@@ -22,19 +21,16 @@ class Ajax extends Base {
      * Generates the javascript part of the ajax.
      */
     public function genJs() : String{
-        if (this.funclist.length < 1) {
-            return '';
-        }
 
-        buffer = '<script type="text/javascript">';
-        for (key in this.funclist.key()) {
-            var parlist = this.funclist[key].get('params').join(', ');
+        var buffer = '<script type="text/javascript">';
+        for (key in this.funclist.keys()) {
+            var parlist = this.funclist[key].params.join(', ');
 
-            buffer += 'function ' + this.funclist[key].get('object') + '_'
-                + this.funclist[key].get('funcname') + "(${parlist}) {";
-            buffer += (if(this.funclist[key].getset('http')) " return MovimWebsocket.sendAjax('" else "MovimWebsocket.send('") +
-                this.funclist[key].get('object') + "', '" +
-                this.funclist[key].get('funcname') + "', [${parlist}]);}\n";
+            buffer += 'function ' + this.funclist[key].object + '_'
+                + this.funclist[key].funcname + "(${parlist}) {";
+            buffer += (if(this.funclist[key].http) " return MovimWebsocket.sendAjax('" else "MovimWebsocket.send('") +
+                this.funclist[key].object + "', '" +
+                this.funclist[key].funcname + "', [${parlist}]);}\n";
         }
 
         return buffer + "</script>\n";
@@ -44,7 +40,7 @@ class Ajax extends Base {
      * Check if the widget is registered
      */
     public function isRegistered(widget : String) : Bool{
-        return this.widgetlist.exists(widget);
+        return this.widgetlist.indexOf(widget) != -1;
     }
 
     /**
@@ -52,11 +48,11 @@ class Ajax extends Base {
      */
     public function defun(widget : String, funcname : String, params : Array<String> , http:Bool=false) {
         this.widgetlist.push(widget);
-        this.funclist[widget+funcname] = [
-            'object' => widget,
-            'funcname' => funcname,
-            'params' => params,
-            'http' => http
-        ];
+        this.funclist[widget+funcname] = {
+            object: widget,
+            funcname: funcname,
+            params: params,
+            http: http
+        };
     }
 }

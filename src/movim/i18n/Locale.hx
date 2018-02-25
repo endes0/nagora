@@ -7,28 +7,39 @@ class Locale {
     private static var _instance : Locale;
     public var translations : Map<String,String>;
     public var language : String;
-    public var hash : Map<String,Map<String,String>> = [];
+    public var hash : Map<String,Map<String,String>> = new Map();
 
     private function new() : Void {
-        this.loadIni(Main.dirs.locales + 'locales.ini');
+        this.loadIni(IniManager.loadFromString(Main.ini_file('locales/locales.ini')), 'locales/locales.ini');
 
-        for(widget in Bootstrap.getWidgets()) {
-            path = 'app/' + widget + '/locales.ini';
-            this.loadIni(path);
+        var w : Array<String> = Locale.load_widgets_ini();
+        for(file in w) {
+            this.loadIni(IniManager.loadFromString(file), 'app/unknow/locales.ini'); //TODO: correct widget name
         }
+    }
+
+    macro public static function load_widgets_ini() {
+      var files : Array<haxe.macro.Expr.ExprOf<String>> = [];
+      for(widget in sys.FileSystem.readDirectory('nagora/app/widgets')) {
+        if( sys.FileSystem.exists('nagora/app/widgets/' + widget + '/locales.ini') ) {
+          files.push(macro $v{sys.io.File.getContent('nagora/app/widgets/' + widget + '/locales.ini')});
+        }
+      }
+
+      return macro $a{files};
     }
 
     /**
      * @desc Load a locales ini file and merge it with hash attribute
      * @param $file The path of the fie
      */
-    private function loadIni(file) {
-      var ini : Map<String,Map<String,String>> = IniManager.loadFromString(Main.ini_file(file));
-      for( key in ini ) {
+    private function loadIni(ini : Map<String,Map<String,String>>, file : String) {
+      //var ini : Map<String,Map<String,String>> = IniManager.loadFromString(Main.ini_file(file));
+      for( key in ini.keys() ) {
         if( hash[key] == null ) {
           hash[key] = ini[key];
         } else {
-          for( key2 in ini ) {
+          for( key2 in ini[key].keys() ) {
             if( hash[key][key2] == null ) {
               hash[key][key2] = ini[key][key2];
             } else {
@@ -52,7 +63,7 @@ class Locale {
      */
 
     public function getList() {
-        lang_list = Languages.get_lang_list();
+        var lang_list = Languages.get_lang_list();
         var dir = sys.FileSystem.readDirectory(Main.dirs.locales);
         var po : Map<String,String> = new Map();
         for(files in dir) {
@@ -72,7 +83,7 @@ class Locale {
      * @param $key The key to translate
      * @param $args Arguments to pass to sprintf
      */
-    public function translate(key : String, args:Array<String>=false) : String {
+    public function translate(key : String, ?args:Array<String>) : String {
         if(key == null || key == '') return key;
 
         var arr = key.split('.');
@@ -113,7 +124,7 @@ class Locale {
      * @desc Auto-detects the language from the user browser
      */
     public function detect(?accepted:String) : Null<String> {
-        var langs : Map<String,String> = [];
+        var langs : Map<String,String> = new Map();
 
         var languages = if(accepted != null) accepted else ''; //TODO _SERVER.getset('HTTP_ACCEPT_LANGUAGE');
 
@@ -128,7 +139,7 @@ class Locale {
         for( key in langs.keys() ) {
             if(sys.FileSystem.exists(Main.dirs.locales + key + '.po')) {
                 this.language = key;
-                return;
+                return null;
             }
 
             var exploded = key.split('-');
@@ -136,7 +147,7 @@ class Locale {
 
             if(sys.FileSystem.exists(Main.dirs.locales + key + '.po')) {
                 this.language = key;
-                return;
+                return null;
             }
 
             this.language = 'en';
@@ -160,11 +171,11 @@ class Locale {
     public function loadPo() : Void {
         var pofile = Main.dirs.locales + this.language + '.po';
         if(!sys.FileSystem.exists(pofile)) {
-            return false;
+            return;
         }
 
         // Parsing the file.
-        handle = sys.io.File.read(pofile, false);
+        var handle = sys.io.File.read(pofile, false);
 
         this.translations = new Map();
 
@@ -178,7 +189,7 @@ class Locale {
 
         while(handle.eof() == false) {
             var line = handle.readLine();
-            if(line.substr(0, 1) == "#" || (line.rtrim()).trim() == "" || comment_m.match(line)) {
+            if(line.substr(0, 1) == "#" || StringTools.trim(StringTools.rtrim(line)) == "" || comment_m.match(line)) {
                 continue;
             }
 
@@ -207,8 +218,8 @@ class Locale {
         var string_m = ~/'#"(.+)"#'/;
         string_m.match(string);
 
-        if(string_m.matches(1) != null) {
-          return string_m.matches(1);
+        if(string_m.matched(1) != null) {
+          return string_m.matched(1);
         } else {
           Main.log.log('Warning', 'error getting quoted string "' + string + '", when loading a locale');
           return ' ';

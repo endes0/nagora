@@ -15,7 +15,7 @@ class User {
         var s = Session.start();
         if (username != null) {
             s.set('username', username);
-            this.userdir = Main.dirs.user + username + '/';
+            this.userdir = Main.dirs.users + username + '/';
         }
     }
 
@@ -26,10 +26,11 @@ class User {
         //TODO: db
         /*sd = new \Modl\SessionxDAO;
         session = sd.get(SESSION_ID);*/
+        var session = null;
 
         if (session != null) {
             if (language) {
-                lang = this.getConfig('language');
+                var lang = this.getConfig('language');
                 if (lang != null) {
                     var l = Locale.start();
                     l.load(lang);
@@ -39,8 +40,8 @@ class User {
             //TODO: db
             /*cd = new \Modl\CapsDAO;
             caps = cd.get(session.host);*/
-            if (caps) {
-                this.caps = caps.features;
+          if (/*caps*/false) {
+                //this.caps = caps.features;
             }
         }
     }
@@ -56,7 +57,7 @@ class User {
     public function createDir() : Void {
         var s = Session.start();
         if (s.get('jid') != null) {
-            this.userdir = Main.dirs.user + s.get('jid') + '/';
+            this.userdir = Main.dirs.users + s.get('jid') + '/';
 
             if (!sys.FileSystem.isDirectory(this.userdir)) {
                 sys.FileSystem.createDirectory(this.userdir);
@@ -84,7 +85,7 @@ class User {
         //TODO: db
         //s = new \Modl\Setting;
 
-        if (config.get('language') != null) {
+        /*if (config.get('language') != null) {
             s.language = config.get('language');
         }
 
@@ -98,7 +99,7 @@ class User {
 
         if (config.get('nightmode') != null) {
             s.nightmode= config.get('nightmode');
-        }
+        }*/
 
         //TODO: db
         /*sd = new \Modl\SettingDAO;
@@ -107,7 +108,7 @@ class User {
         this.createDir();
 
         //sys.io.File.putContent(this.userdir+'config.dump', php.Lib.serialize(config)); PHP serialization only works on PHP (XD), so I use Haxe serialization
-        sys.io.File.putContent(this.userdir+'config.dump', haxe.Serializer.run(config));
+        sys.io.File.saveContent(this.userdir+'config.dump', haxe.Serializer.run(config));
 
         this.reload(true);
     }
@@ -118,28 +119,32 @@ class User {
         s = sd.get();*/
 
         if (key == null) {
-            return s;
+            return null; //s;
         }
 
-        if (Reflect.hasField(s, key)) {
-            return Reflect.field(s, key);
+        if (Reflect.hasField( /*s*/ null, key)) {
+            return Reflect.field( /*s*/ null, key);
         } else {
           Main.log.log('Warning', 'Attemping to getting an unexistent config key: ' + key);
           return null;
         }
     }
 
-    public function getDumpedConfig(?key:String) : Map<String,String> {
+    public function getDumpedConfig() : Map<String,String> {
         if (!sys.FileSystem.exists(this.userdir+'config.dump')) {
             return new Map();
         }
 
         // var config = php.Lib.unserialize(sys.io.File.getContent(this.userdir+'config.dump')); same as line 109
-        var config = haxe.Unserializer.run(sys.io.File.getContent(this.userdir+'config.dump'));
+        var config : Map<String,String> = haxe.Unserializer.run(sys.io.File.getContent(this.userdir+'config.dump'));
 
-        if (key == null) {
-            return config;
-        }
+
+        return config;
+    }
+
+    public function getDumpedConfigKey(key:String) : String {
+        // var config = php.Lib.unserialize(sys.io.File.getContent(this.userdir+'config.dump')); same as line 109
+        var config : Map<String,String> = haxe.Unserializer.run(sys.io.File.getContent(this.userdir+'config.dump'));
 
         if (config[key] != null) {
             return config[key];
@@ -158,7 +163,8 @@ class User {
                 case 'upload':
                     //TODO: db
                     //cd = new \Modl\CapsDAO;
-                    return (cd.getUpload(this.getServer()) != null);
+                    //return (cd.getUpload(this.getServer()) != null);
+                    return false;
                 default:
                     return false;
             }

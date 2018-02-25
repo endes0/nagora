@@ -22,6 +22,8 @@ class Base {
     public var title : String;
     public var image : String;
     public var description : String;
+    public var url : String = null;
+    public var links : Array<String> = [];
 
     /**
      * Initialises Widget stuff.
@@ -88,7 +90,7 @@ class Base {
     }
 
     public function route(page : String, ?params:Array<String>, ?tab:String) : String {
-        return movim.Route.urlize(args);
+        return movim.Route.urlize(page, params, tab);
     }
 
     public function rpc() : Void { //TODO
@@ -128,9 +130,9 @@ class Base {
      */
     public function draw() { //TODO: display
         this.display();
-        if(sys.FileSystem.exists(this.respath(this.name.toLowerCase()+'.tpl', true))) {
+        /*if(sys.FileSystem.exists(this.respath(this.name.toLowerCase()+'.tpl', true))) {
             return (this.view.draw(this.name.toLowerCase(), true)).trim();
-        }
+        }*/
 
         return '';
     }
@@ -155,20 +157,20 @@ class Base {
      * @param file is the file's name to make up the path for.
      * @param fspath is optional, returns the OS path if true, the URL by default.
      */
-    private function respath(file, fspath:Bool=false, parent:Bool=false, notime:Bool=false)
-    {
+     private function respath(file : String, fspath:Bool=false, parent:Bool=false) : String {
+       var folder : String = '';
         if(parent == false) {
-            folder = get_class(this);
+            folder = Type.getClassName(Type.getClass(this));
         } else {
-            folder = get_parent_class(this);
+            folder =  Type.getClassName(Type.getSuperClass(Type.getClass(this)));
         }
 
-        path = 'app/widgets/' + folder + '/' + file;
+        var path = 'app/widgets/' + folder + '/' + file;
 
         if(fspath) {
-            path = DOCUMENT_ROOT + '/'+path;
+            //path = path;
         } else {
-            path = urilize(path, notime);
+            path = StringTools.urlEncode(path);
         }
 
         return path;
@@ -191,10 +193,9 @@ class Base {
         }
 
         var funcname = params.shift();
-        var args = params.join(', ');
 
-        var cl = Type.createInstance(Type.getClassName(this.name), []);
-        return Reflect.callMethod(cl, Reflect.field(cl, funcname), args);
+        var cl = Type.createInstance(Type.resolveClass(this.name), []);
+        return Reflect.callMethod(cl, Reflect.field(cl, funcname), params);
     }
 
     /**
