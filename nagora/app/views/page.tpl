@@ -14,7 +14,7 @@
     <link rel="icon" type="image/png" href="<?hhp this.linkFile('img/app/96.png');?>" sizes="96x96">
     <link rel="icon" type="image/png" href="<?hhp this.linkFile('img/app/128.png');?>" sizes="128x128">
     <script src="/app/assets/js/favico.js"></script>
-    <script src="<?hhp this.echo(movim.route.urlize('system')); ?>"></script>
+    <script src="<?hhp this.echo(movim.Route.urlize('system')); ?>"></script>
 
     <meta name="viewport" content="width=device-width, user-scalable=no">
 
@@ -44,13 +44,13 @@
     ?>
     </head>
     <body dir="<?hhp this.dir();?>"
-          class="<?hhp if(!$this->_public && new movim.User().getConfig('nightmode')) { ?>nightmode<?php } ?>">
+          class="<?hhp if(!this._public && new movim.User().getConfig('nightmode')) { ?>nightmode<?hhp } ?>">
         <noscript>
             <style type="text/css">
                 nav {display:none;} #content {display: none;}
             </style>
             <div class="warning" style="width: 500px; margin: 0 auto;">
-            <?hhp this.echo(Locale.start().translate('global.no_js')); ?>
+            <?hhp this.echo(movim.i18n.Locale.start().translate('global.no_js')); ?>
             </div>
         </noscript>
         <div id="hiddendiv"></div>
@@ -62,7 +62,7 @@
                         <i class="zmdi zmdi-code-setting"></i>
                     </span>
                     <p class="normal">
-                        <?hhp this.echo(Locale.start().translate('error.websocket')); ?>
+                        <?hhp this.echo(movim.i18n.Locale.start().translate('error.websocket')); ?>
                     </p>
                 </li>
             </ul>

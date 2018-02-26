@@ -7,7 +7,7 @@
         <?hhp this.widget('Presence');?>
         <?hhp this.widget('Navigation');?>
     </nav>
-<?php } ?>
+<?hhp } ?>
 
 <main style="background-color: var(--movim-background);">
     <section>

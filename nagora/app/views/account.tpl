@@ -10,7 +10,7 @@
                                 <i class="zmdi zmdi-home"></i>
                             </a>
                         </span>
-                        <p class="center"><?hhp this.echo(Locale.start().translate('page.account_creation'); ?></p>
+                        <p class="center"><?hhp this.echo(movim.i18n.Locale.start().translate('page.account_creation')); ?></p>
                     </li>
                 </ul>
             </header>

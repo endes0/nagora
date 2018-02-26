@@ -17,7 +17,7 @@
                             <i class="zmdi zmdi-help on_desktop"></i>
                             <i class="zmdi zmdi-menu on_mobile" onclick="MovimTpl.toggleMenu()"></i>
                         </span>
-                        <p class="center"><?hhp this.echo(Locale.start().translate('page.help')); ?></p>
+                        <p class="center"><?hhp this.echo(movim.i18n.Locale.start().translate('page.help')); ?></p>
                     </li>
                 </ul>
             </header>

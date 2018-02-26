@@ -2,8 +2,9 @@ package movim.template;
 
 import movim.controller.Ajax;
 import movim.widget.Wrapper;
-import hhp.Template;
+import hhp.Hhp;
 
+@:autoBuild(hhp.TemplateBuilder.build())
 class Builder {
     private var theme : String = 'movim';
     private var _view : String = '';
@@ -91,7 +92,7 @@ class Builder {
       }
       for (name in sys.FileSystem.readDirectory('nagora/app/views')) {
         var className : String = hhp.TemplateBuilder.createClass(name, pos, parent);
-        map.push(macro $v{name} => macro $v{haxe.macro.Context.parse('new $className()', pos)});
+        map.push(macro $v{name} => $v{haxe.macro.Context.parse('new $className()', pos)});
       }
       return macro $a{map};
     }

@@ -27,7 +27,7 @@
                 <?hhp this.widget('Tabs');?>
                 <?hhp this.widget('Communities'); ?>
                 <?hhp this.widget('CommunitiesServers'); ?>
-                <?hhp if(this.user->isSupported('pubsub')) { ?>
+                <?hhp if(this.user.isSupported('pubsub')) { ?>
                     <?hhp this.widget('CommunitySubscriptions'); ?>
                 <?hhp } ?>
             </div>
