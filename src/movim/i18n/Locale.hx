@@ -1,7 +1,9 @@
 package movim.i18n;
 
+#if !nodejs
 import hxIni.IniManager;
 import hxIni.IniManager.Ini;
+#end
 
 class Locale {
     private static var _instance : Locale;
@@ -10,23 +12,24 @@ class Locale {
     public var hash : Map<String,Map<String,String>> = new Map();
 
     private function new() : Void {
-        this.loadIni(IniManager.loadFromString(Main.ini_file('locales/locales.ini')), 'locales/locales.ini');
+        this.loadIni(
+          #if nodejs
+            Jsinimanager.loadFromString(Macro.ini_file('locales/locales.ini')), 'locales/locales.ini'
+          #else
+            IniManager.loadFromString(Macro.ini_file('locales/locales.ini')), 'locales/locales.ini'
+          #end
+          );
 
-        var w : Array<String> = Locale.load_widgets_ini();
+        var w : Array<String> = Macro.load_widgets_ini();
         for(file in w) {
-            this.loadIni(IniManager.loadFromString(file), 'app/unknow/locales.ini'); //TODO: correct widget name
+            this.loadIni(
+              #if nodejs
+                Jsinimanager.loadFromString(file), 'app/unknow/locales.ini'
+              #else
+                IniManager.loadFromString(file), 'app/unknow/locales.ini'
+              #end
+              ); //TODO: correct widget name
         }
-    }
-
-    macro public static function load_widgets_ini() {
-      var files : Array<haxe.macro.Expr.ExprOf<String>> = [];
-      for(widget in sys.FileSystem.readDirectory('nagora/app/widgets')) {
-        if( sys.FileSystem.exists('nagora/app/widgets/' + widget + '/locales.ini') ) {
-          files.push(macro $v{sys.io.File.getContent('nagora/app/widgets/' + widget + '/locales.ini')});
-        }
-      }
-
-      return macro $a{files};
     }
 
     /**
@@ -175,7 +178,11 @@ class Locale {
         }
 
         // Parsing the file.
-        var handle = sys.io.File.read(pofile, false);
+        var handle =    #if nodejs
+                          sys.io.File.getContent(pofile).split('\n');
+                        #else
+                          sys.io.File.read(pofile, false);
+                        #end
 
         this.translations = new Map();
 
@@ -186,9 +193,14 @@ class Locale {
         var comment_m = ~/#^msgctxt#/;
         var id_m = ~/#^msgid#/;
         var str_m = ~/#^msgstr#/;
-
+        #if nodejs
+        var i = 0;
+        while(handle.length > i) {
+            var line = handle[i];
+        #else
         while(handle.eof() == false) {
             var line = handle.readLine();
+        #end
             if(line.substr(0, 1) == "#" || StringTools.trim(StringTools.rtrim(line)) == "" || comment_m.match(line)) {
                 continue;
             }
@@ -206,12 +218,17 @@ class Locale {
             } else {
                 last_token += this.getQuotedString(line);
             }
+            #if nodejs
+              i++;
+            #end
         }
         if(last_token == "msgstr") {
             this.translations[msgid] = msgstr;
         }
 
-        handle.close();
+        #if !nodejs
+          handle.close();
+        #end
     }
 
     private function getQuotedString(string) : String {

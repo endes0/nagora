@@ -20,11 +20,6 @@ class Wrapper {
     public var url : String = null; // If a widget has defined a particular url
     public var links : Array<String> = []; // If a widget have to inject a link in the header
 
-    macro public static function import_all() : Void {
-      haxe.macro.Compiler.include('app.widgets');
-      haxe.macro.Compiler.keep('app.widgets');
-    }
-
     public function registerAll(?load:Array<String>) : Void {
         //widgets_dir = scandir(APP_PATH +"widgets/");
 

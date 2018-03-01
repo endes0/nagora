@@ -74,7 +74,11 @@ class Bootstrap {
             errors.push('Couldn\'t create directory users:' + e);
           }
         } else {
-          sys.io.File.write(Main.dirs.users + '/index.html').close();
+          #if nodejs
+            sys.io.File.saveContent(Main.dirs.users + '/index.html', sys.io.File.getContent(Main.dirs.users + '/index.html'));
+          #else
+            sys.io.File.append(Main.dirs.users + '/index.html').close();
+          #end
         }
 
         if (errors.length > 0) {
@@ -84,13 +88,21 @@ class Bootstrap {
         for(fileName in listWritableFile) {
             if (!sys.FileSystem.exists(fileName)) {
               try {
-                sys.io.File.write(fileName).close();
+                #if nodejs
+                  sys.io.File.saveContent(fileName, ' ');
+                #else
+                  sys.io.File.write(fileName).close();
+                #end
               } catch(e:Dynamic) {
                 errors.push('We\'re unable to write to ' + fileName + ': check rights (Error:' + e + ')');
               }
             } else {
               try {
-                sys.io.File.append(fileName).close();
+                #if nodejs
+                  sys.io.File.saveContent(fileName, sys.io.File.getContent(fileName));
+                #else
+                  sys.io.File.append(fileName).close();
+                #end
               } catch(e:Dynamic) {
                 errors.push('We\'re unable to write to file ' + fileName + ': check rights (Error:' + e + ')');
               }
@@ -104,7 +116,7 @@ class Bootstrap {
     private function setConstants() : Void {
         Main.app.title = 'Movim';
         Main.app.name = 'movim';
-        Main.app.version = Main.getVersion();
+        Main.app.version = Macro.getVersion();
         //Main.app.secured = this.isServerSecured();
         Main.app.small_picture_limit = 320000;
 

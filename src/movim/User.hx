@@ -61,7 +61,11 @@ class User {
 
             if (!sys.FileSystem.isDirectory(this.userdir)) {
                 sys.FileSystem.createDirectory(this.userdir);
-                sys.io.File.write(this.userdir + 'index.html').close();
+                #if nodejs
+                  sys.io.File.saveContent(this.userdir + 'index.html', ' ');
+                #else
+                  sys.io.File.write(this.userdir + 'index.html').close();
+                #end
             }
         }
     }

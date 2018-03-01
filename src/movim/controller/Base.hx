@@ -7,10 +7,10 @@ import movim.User;
 class Base {
     public var name : String = 'main';          // The name of the current page
     public var unique : Bool = false;         // Only one WS for this page
-    var session_only(default,null) : Bool = false;// The page is protected by a session ?
-    var raw(default,null) : Bool = false;         // Display only the content ?
-    var _public(default,null) : Bool = false;      // It's a public page
-    var page(default,null) : Builder;
+    var session_only : Bool = false;// The page is protected by a session ?
+    var raw : Bool = false;         // Display only the content ?
+    var _public : Bool = false;      // It's a public page
+    var page : Builder;
 
     public function new() : Void {
         this.page = new Builder(new User());
@@ -72,14 +72,13 @@ class Base {
         var user = new User();
         var content = new Builder(user);
 
-        if (this.raw) { //TODO: display
-            //echo content.build(this.name);
+        if (this.raw) {
+            Main.display(content.build(this.name));
         } else {
             var built = content.build(this.name);
             this.page.setContent(built);
 
-            //TODO: display
-            //echo this.page.build('page', this._public);
+            Main.display(this.page.build('page', this._public));
         }
     }
 }

@@ -46,8 +46,8 @@ class Builder {
 
         if(_return) {
             return path;
-        } else { //TODO: display
-            //echo path;
+        } else {
+            this.echo(path);
             return '';
         }
     }
@@ -56,10 +56,9 @@ class Builder {
      * Inserts the link tag for a css file.
      */
     public function themeCss(file : String) : Void {
-      //TODO: display
-        /*echo '<link rel="stylesheet" href="'
+        this.echo( '<link rel="stylesheet" href="'
             + this.linkFile(file, true) +
-            "\" type=\"text/css\" />\n"; */
+            "\" type=\"text/css\" />\n");
     }
 
     /**
@@ -69,7 +68,7 @@ class Builder {
         this._view = view;
         this._public = _public;
 
-        var template : Dynamic = Builder.prebuildall(movim.template.Builder).get(this._view+'.tpl'); //hhp.Hhp.render('views/' + template, null, this);
+        var template : Dynamic = Macro.prebuild_all_tmp(movim.template.Builder).get(this._view+'.tpl'); //hhp.Hhp.render('views/' + template, null, this);
         var outp : String = template.execute();
 
         var scripts = this.printCss();
@@ -80,21 +79,6 @@ class Builder {
         outp = StringTools.replace('<%scripts%>', outp, scripts);
 
         return outp;
-    }
-
-    macro public static function prebuildall(cl : haxe.macro.Expr) {
-      var map : Array<haxe.macro.Expr> = [];
-      var pos = haxe.macro.Context.currentPos();
-
-      var parent : String = switch (cl.expr) {
-          case EConst(CIdent('null')) : 'hhp.Template';
-          case _                      : haxe.macro.ExprTools.toString(cl);
-      }
-      for (name in sys.FileSystem.readDirectory('nagora/app/views')) {
-        var className : String = hhp.TemplateBuilder.createClass(name, pos, parent);
-        map.push(macro $v{name} => $v{haxe.macro.Context.parse('new $className()', pos)});
-      }
-      return macro $a{map};
     }
 
     /**
@@ -113,8 +97,8 @@ class Builder {
         if(widgets.title != '') {
             _title += ' - ' + widgets.title;
         }
-        //TODO: display
-        //echo _title;
+
+        this.echo(_title);
     }
 
     /**
@@ -128,8 +112,7 @@ class Builder {
             this._dir = 'rtl';
         }
 
-        //TODO: display
-        //echo this._dir;
+        this.echo(this._dir);
     }
 
     /**
@@ -237,8 +220,7 @@ class Builder {
     }
 
     public function scripts() : Void {
-        //TODO: display
-        //echo '<%scripts%>';
+        this.echo('<%scripts%>');
     }
 
     public function printScripts() : String {
@@ -274,8 +256,7 @@ class Builder {
     }
 
     public function content() : Void {
-        //TODO: display
-        //echo this._content;
+        this.echo(this._content);
     }
 
     /**
@@ -285,8 +266,7 @@ class Builder {
         var widgets = Wrapper.getInstance();
         widgets.setView(this._view);
 
-        //TODO: display
-        //echo widgets.runWidget(name, 'build');
+        this.echo(widgets.runWidget(name, 'build', []));
     }
 
     public function echo (v:Dynamic) : Void {

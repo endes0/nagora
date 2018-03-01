@@ -9,11 +9,6 @@ class Front extends Base {
         this.runRequest(r.find());
     }
 
-    macro public static function import_all() : Void {
-      haxe.macro.Compiler.include('app.controllers');
-      haxe.macro.Compiler.keep('app.controllers');
-    }
-
     public function loadController(request:String) : Base {
       switch request {
       /*case 'about': return new AboutController();

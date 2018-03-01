@@ -1,6 +1,6 @@
 
 /**
- * @file index.php
+ * @file Main
  * This file is part of Movim.
  *
  * @brief Prepares all the needed fixtures and fires up the main request
@@ -76,19 +76,10 @@ class Main {
     Wrapper.destroyInstance();
   }
 
-  macro public static function getVersion() : ExprOf<String> {
-    return macro $v{sys.io.File.getContent('./VERSION')};
-  }
-
-  macro public static function ini_file( file : ExprOf<String> ) : ExprOf<String> {
-    var str = switch(file.expr) {
-           case EConst(CString(str)):
-               str;
-           default:
-               trace( file.expr );
-               throw "type should be string const";
-       }
-    return macro $v{sys.io.File.getContent(str)};
+  public static function display( content : String ) : Void {
+    #if js
+    js.Browser.document.body.innerHTML = content;
+    #end
   }
 
   static function main() {
