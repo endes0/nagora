@@ -25,11 +25,7 @@ class Builder {
      */
     public function new(?user : User) {
         this.user = user;
-
-        //TODO: db
-        /*cd = new .Modl.ConfigDAO;
-        config = cd.get(); */
-        //this.theme = config.theme;
+        this.theme = Main.config['Config']['theme'];
     }
 
     /*public function viewsPath(file) : Void {

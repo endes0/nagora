@@ -57,7 +57,22 @@ class Main {
   public static var log : easylog.EasyLogger;
 
   public static var session_id : String;
-
+  public static var config(default, set) : Map<String,Map<String,String>>;
+  static function set_config(v:Map<String,Map<String,String>>) : Map<String,Map<String,String>> {
+    if( Main.config != null ) {
+      try {
+        #if nodejs
+          Jsinimanager.writeToFile(v, Main.dirs.config + 'config.ini');
+        #else
+          hxIni.IniManager.writeToFile(v, Main.dirs.config + 'config.ini');
+        #end
+      } catch(e:Dynamic) {
+        throw 'Error saving config file, posibily was corrupted in this saving process. Error: ' + e;
+      }
+    }
+    Main.config = v;
+    return v;
+  }
 
   public function new() {
     try {
@@ -65,7 +80,8 @@ class Main {
       bootstrap.boot();
     } catch(e:Dynamic) {
       trace(e);
-      trace( 'Oops, something went wrong, please check the log files' );
+      trace( haxe.CallStack.toString(haxe.CallStack.exceptionStack()) );
+      throw ( 'Oops, something went wrong, please check the log files' );
     }
 
     var rqst = new Front();

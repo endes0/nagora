@@ -40,31 +40,18 @@ class Route extends Base {
             super();
     }
 
-    public function find() : String { //TODO
-        /*this.fix(php.Web.getParams(), _SERVER.get('QUERY_STRING'));
+    public function find() : String {
+        //this.fix(php.Web.getParams(), _SERVER.get('QUERY_STRING'));
 
-        gets = php.Web.getParams().keys();
-        uri = gets[0];
-        php.Web.getParams()[uri] = null;
-        request = uri.split('/'); */
-
-        this._page = ''; //request.shift();
+        this._page = #if nodejs
+                        js.Browser.location.pathname.split('/').pop();
+                     #end
 
         if (this._routes[this._page] != null) {
             var route = this._routes[this._page];
         }
 
-        /*if (request.length > 0 && route.length > 0) {
-            i = 0;
-            for (key in route) {
-                if (request[i] != null) {
-                    php.Web.getParams()[key] = request[i];
-                }
-                i++;
-            }
-        }*/
-
-        if (this._page == null || this._page == 'main') {
+        if (this._page == null || this._page == 'main' || this._page == 'main.html') {
             this._page = 'news';
         }
 
@@ -79,7 +66,9 @@ class Route extends Base {
         var r = new Route();
         var routes = r._routes;
 
-        if(page == 'root') return ''; //TODO BASE_URI;
+        if(page == 'root') #if nodejs
+                              return js.Browser.location.origin;
+                           #end
 
         if (routes[page] != null) {
             var uri = '';
@@ -88,12 +77,14 @@ class Route extends Base {
                 tab = '#'+tab;
             } else {
                 //We construct a classic URL if the rewriting is disabled
-                uri = /*BASE_URI + */'?'+ page; //TODO
+                uri = #if nodejs
+                        js.Browser.location.origin+'/'+ page;
+                      #end
             }
 
             if (params != null && params.length > 0) {
                 for (value in params) {
-                    uri += '/' + value;
+                    uri += '/' + StringTools.urlEncode(value);
                 }
             }
 

@@ -47,11 +47,11 @@ class Front extends Base {
     /**
      * Here we load, instanciate and execute the correct controller
      */
-    public function runRequest(request : String) : Void {
+    public function runRequest(request : String, ?json : Dynamic) : Void {
         if(request == 'ajax') {
             var req = new haxe.Http('http://localhost:1560/ajax/');
             req.addParameter('sid', Main.session_id);
-            req.addParameter('json', null); //TODO
+            req.addParameter('json', StringTools.urlEncode(Std.string(json)));
             req.onError = function( e:String ) : Void {
               Main.log.log(easylog.EasyLogger.Warning, "Error on ajax request to daemon: " + e);
             }

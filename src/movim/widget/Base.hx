@@ -4,6 +4,7 @@ package movim.widget;
 import movim.controller.Ajax;
 import movim.User;
 
+@:autoBuild(hhp.TemplateBuilder.build())
 class Base {
     private var js : Array<String> = [];     // Contains javascripts
     private var css : Array<String> = [];    // Contains CSS files
@@ -14,6 +15,7 @@ class Base {
     private var pure : Bool;        // To render the widget without the container
 
     private var _view : String;
+    private var view : Map<String, Dynamic>;
 
     public var events : Map<String,Array<String>> = new Map();
     public var filters : Map<String, String> = new Map();
@@ -24,6 +26,9 @@ class Base {
     public var description : String;
     public var url : String = null;
     public var links : Array<String> = [];
+
+    private var _buffer : String = '';
+    private var _isLayoutDisabled : Bool = false;
 
     /**
      * Initialises Widget stuff.
@@ -66,23 +71,7 @@ class Base {
             }
         }
 
-        //TODO: display
-        /*if(php_sapi_name() != 'cli') {
-            config = [
-                'tpl_dir'       => this.respath('', true),
-                'cache_dir'     => CACHE_PATH,
-                'tpl_ext'       => 'tpl',
-                'auto_escape'   => false
-            ];
-
-            // We load the template engine
-            this.view = new Tpl;
-            this.view.objectConfigure(config);
-
-            this.view.assign('c', this);
-
-            this.pure = false;
-        }*/
+        this.view = Macro.prebuild_all_widgets(movim.widget.Base);
     }
 
     public function supported(key) : Bool {
@@ -102,7 +91,7 @@ class Base {
     /**
      * Generates the widget's HTML code.
      */
-    public function build() { //TODO
+    public function build() : String {
         return this.draw();
     }
 
@@ -128,13 +117,10 @@ class Base {
     /**
      *  @desc Return the template's HTML code
      */
-    public function draw() { //TODO: display
+    public function draw() : String {
         this.display();
-        /*if(sys.FileSystem.exists(this.respath(this.name.toLowerCase()+'.tpl', true))) {
-            return (this.view.draw(this.name.toLowerCase(), true)).trim();
-        }*/
-
-        return '';
+        var out : String = this.view[this.name].execute();
+        return StringTools.trim(out);
     }
 
     /*private function tpl() : Void {
@@ -165,7 +151,7 @@ class Base {
             folder =  Type.getClassName(Type.getSuperClass(Type.getClass(this)));
         }
 
-        var path = 'app/widgets/' + folder + '/' + file;
+        var path = 'nagora/app/widgets/' + folder + '/' + file;
 
         if(fspath) {
             //path = path;
@@ -261,5 +247,25 @@ class Base {
         if(filter != null) {
             this.filters[func] = filter;
         }
+    }
+
+    public function echo (v:Dynamic) : Void {
+       this._buffer += (v == null ? '' : Std.string(v));
+   }
+
+    public inline function getBuffer () : String {
+       return this._buffer;
+    }
+
+    public function execute () : String {
+       return this._buffer;
+    }
+
+    public function clearBuffer () : Void {
+       this._buffer = '';
+    }
+
+    public function disableLayout () : Void {
+       this._isLayoutDisabled = true;
     }
 }

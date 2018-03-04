@@ -7,8 +7,10 @@ dependencies.hxml
 
 --macro Macro.import_all_widgets()
 --macro Macro.import_all_controllers()
---macro hhp.Hhp.basePath('nagora/app/views')
 
 -dce std
+-debug
 -main Main
--js bin/test.js
+-js bin/main.js
+-cmd cp nagora/template/main.html bin/main.html
+-cmd cp nagora/template/package.json bin/package.json

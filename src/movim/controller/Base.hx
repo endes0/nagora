@@ -22,13 +22,17 @@ class Base {
      * @param  name is the desired variable's name.
      * @return the value of the requested variable, or FALSE.
      */
-    /*private function fetchGet(name) : String { //TODO
-        if (php.Web.getParams()[name] != null) {
-            return php.Web.getParams()[name];
-        } else {
-            return null;
+    private function fetchGet(name : String) : String {
+      #if nodejs
+        var reg = ~/(?:\?|&)([^=]+)=([^=\?&]+)/;
+        while( reg.match(js.Browser.location.search) ) {
+          if( reg.matched(1) == name ) {
+            return reg.matched(2);
+          }
         }
-    }/*
+        return '';
+      #end
+    }
 
     /**
      * Returns the value of a $_POST variable. Mainly used to avoid getting
@@ -54,8 +58,12 @@ class Base {
         }
     }
 
-    public function redirect(page : String, ?params:Array<String>) : Void { //TODO
+    public function redirect(page : String, ?params:Array<String>) : Void {
         var url = Route.urlize(page, params);
+        js.Browser.window.history.pushState(page, page, url);
+        var rqst = new Front();
+        rqst.handle();
+        //js.Browser.location.replace(url);
         //php.Web.setHeader('Location: '+ url);
     }
 

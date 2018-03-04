@@ -70,12 +70,19 @@ class Bootstrap {
         if (!sys.FileSystem.exists(Main.dirs.users)) {
           try {
             sys.FileSystem.createDirectory(Main.dirs.users);
+            #if nodejs
+              sys.io.File.saveContent(Main.dirs.users + '/index.html', ' ');
+            #end
           } catch(e:Dynamic) {
             errors.push('Couldn\'t create directory users:' + e);
           }
         } else {
           #if nodejs
-            sys.io.File.saveContent(Main.dirs.users + '/index.html', sys.io.File.getContent(Main.dirs.users + '/index.html'));
+            if (sys.FileSystem.exists(Main.dirs.users + '/index.html')) {
+              sys.io.File.saveContent(Main.dirs.users + '/index.html', sys.io.File.getContent(Main.dirs.users + '/index.html'));
+            } else {
+              sys.io.File.saveContent(Main.dirs.users + '/index.html', ' ');
+            }
           #else
             sys.io.File.append(Main.dirs.users + '/index.html').close();
           #end
@@ -114,25 +121,21 @@ class Bootstrap {
     }
 
     private function setConstants() : Void {
-        Main.app.title = 'Movim';
-        Main.app.name = 'movim';
-        Main.app.version = Macro.getVersion();
-        //Main.app.secured = this.isServerSecured();
-        Main.app.small_picture_limit = 320000;
+        Main.app = {
+          title: 'Movim',
+          name: 'movim',
+          version: Macro.getVersion(),
+          small_picture_limit: 320000
+        };
 
-        //TODO: config storage
-        /*if (isset(_COOKIE.get('MOVIM_SESSION_ID'))) {
-            define('SESSION_ID',    _COOKIE.get('MOVIM_SESSION_ID'));
-        } else {
-            define('SESSION_ID',    getenv('sid'));
-        }*/
-
-        Main.dirs.themes = 'themes/';
-        Main.dirs.users = 'users/';
-        Main.dirs.locales = 'locales/';
-        Main.dirs.cache = 'cache/';
-        Main.dirs.log = 'log/';
-        Main.dirs.config ='config/';
+        Main.dirs = {
+          themes: 'themes/',
+          users: 'users/',
+          locales: 'locales/',
+          cache: 'cache/',
+          log: 'log/',
+          config: 'config/'
+        };
     }
 
     /* private function loadCommonLibraries() : Void {
@@ -161,9 +164,7 @@ class Bootstrap {
     public function loadLanguage() : Void{
         var user = new User();
 
-        //TODO: db
-        //cd = new \Modl\ConfigDAO;
-        //config = cd.get();
+        var config = Main.config['Config'];
 
         var l = movim.i18n.Locale.start();
 
@@ -178,12 +179,13 @@ class Bootstrap {
             l.detect(Sys.environment()['language']);
             l.loadPo();
         } else {
-            //db l.load(config.locale);
+            l.load(config['locale']);
         }
     }
 
     private function setLogs() : Void {
       Main.log = new EasyLogger(Main.dirs.log + "[logType].log");
+      Main.log.consoleOutput = true;
     }
 
     private function setTimezone() : Void {
@@ -191,39 +193,20 @@ class Bootstrap {
     }
 
     private function loadModl() : Bool {
-      //TODO: db
-        // We load Movim Data Layer
-        /*db = \Modl\Modl.getInstance();
-        db.setModelsPath(APP_PATH+'models');
+        #if nodejs
+          Main.config = Jsinimanager.loadFromFile(Main.dirs.config + 'config.ini');
+        #else
+          Main.config = hxIni.IniManager.loadFromFile(Main.dirs.config + 'config.ini');
+        #end
+        if(Main.config == null) Main.config = new Map();
 
-        \Modl\Utils.loadModel('Config');
-        \Modl\Utils.loadModel('Presence');
-        \Modl\Utils.loadModel('Contact');
-        \Modl\Utils.loadModel('Privacy');
-        \Modl\Utils.loadModel('RosterLink');
-        \Modl\Utils.loadModel('Cache');
-        \Modl\Utils.loadModel('Postn');
-        \Modl\Utils.loadModel('Info');
-        \Modl\Utils.loadModel('EncryptedPass');
-        \Modl\Utils.loadModel('Subscription');
-        \Modl\Utils.loadModel('SharedSubscription');
-        \Modl\Utils.loadModel('Caps');
-        \Modl\Utils.loadModel('Invite');
-        \Modl\Utils.loadModel('Message');
-        \Modl\Utils.loadModel('Sessionx');
-        \Modl\Utils.loadModel('Setting');
-        \Modl\Utils.loadModel('Conference');
-        \Modl\Utils.loadModel('Tag');
-        \Modl\Utils.loadModel('Url');
-
-        if (sys.FileSystem.exists(DOCUMENT_ROOT+'/config/db.inc.php')) {
-            require DOCUMENT_ROOT+'/config/db.inc.php';
-        } else {
-            throw new \Exception('Cannot find config/db.inc.php file');
+        for( part in ['Config', 'Presence', 'Contact', 'Privacy', 'RosterLink', 'Cache', 'Postn', 'Info', 'EncryptedPass', 'Subscription', 'SharedSubscription', 'Caps', 'Invite', 'Message', 'Sessionx', 'Setting', 'Conference', 'Tag', 'Url'] ) {
+          if( !Main.config.exists(part) ) {
+            Main.config[part] = new Map();
+          }
         }
 
-        db.setConnectionArray(conf);
-        db.connect();*/
+        Main.session_id = Main.config['Sessionx']['session'];
 
         return true;
     }
@@ -235,26 +218,19 @@ class Bootstrap {
             req.onData = function( d : String ) : Void {
               var process : Bool = if(d == 'true') true else false;
 
-              //TODO: db
-              /*var sd = new \Modl\SessionxDAO;
-              var session = sd.get(Main.session_id); */
-              var session = null;
+              var session = Main.config['Sessionx'];
 
               if (session != null) {
                   // There a session in the DB but no process
                   if (!process) {
-                      //db sd.delete(SESSION_ID);
+                      Main.config['Sessionx'] = new Map();
                       return;
                   }
 
-                  //TODO: db
-                  /*var db = Modl.Modl.getInstance();
-                  db.setUser(session.jid);*/
-
                   var s = Session.start();
-                  s.set('jid', session.jid);
-                  s.set('host', session.host);
-                  s.set('username', session.username);
+                  s.set('jid', session['jid']);
+                  s.set('host', session['host']);
+                  s.set('username', session['username']);
               } else if (process) {
                   // A process but no session in the db
                   var req = new haxe.Http('http://localhost:1560/disconnect/');
