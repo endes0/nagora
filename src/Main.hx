@@ -59,16 +59,14 @@ class Main {
   public static var session_id : String;
   public static var config(default, set) : Map<String,Map<String,String>>;
   static function set_config(v:Map<String,Map<String,String>>) : Map<String,Map<String,String>> {
-    if( Main.config != null ) {
-      try {
-        #if nodejs
-          Jsinimanager.writeToFile(v, Main.dirs.config + 'config.ini');
-        #else
-          hxIni.IniManager.writeToFile(v, Main.dirs.config + 'config.ini');
-        #end
-      } catch(e:Dynamic) {
-        throw 'Error saving config file, posibily was corrupted in this saving process. Error: ' + e;
-      }
+    try {
+      #if nodejs
+        Jsinimanager.writeToFile(v, Main.dirs.config + 'config.ini');
+      #else
+        hxIni.IniManager.writeToFile(v, Main.dirs.config + 'config.ini');
+      #end
+    } catch(e:Dynamic) {
+      throw 'Error saving config file, posibily was corrupted in this saving process. Error: ' + e;
     }
     Main.config = v;
     return v;
@@ -94,7 +92,7 @@ class Main {
 
   public static function display( content : String ) : Void {
     #if js
-    js.Browser.document.body.innerHTML = content;
+    js.Browser.document.getElementsByTagName('html')[0].innerHTML = content;
     #end
   }
 

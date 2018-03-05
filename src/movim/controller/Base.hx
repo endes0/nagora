@@ -16,6 +16,13 @@ class Base {
         this.page = new Builder(new User());
     }
 
+    public function load() : Void {
+      Main.log.log('Warning', 'This function should be override.');
+    }
+
+    public function dispatch() : Void {
+      Main.log.log('Warning', 'This function should be override.');
+    }
     /**
      * Returns the value of a $_GET variable. Mainly used to avoid getting
      * notices from PHP when attempting to fetch an empty variable.

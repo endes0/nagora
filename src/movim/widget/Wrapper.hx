@@ -63,7 +63,7 @@ class Wrapper {
         if(Type.resolveClass('app.widgets.' + name) != null) {
             class_name = Type.resolveClass('app.widgets.' + name);
         } else {
-            throw 'error.widget_load_error' + name;
+            throw movim.i18n.Locale.start().translate('error.widget_load_error') + name;
         }
 
         var widget : Base = null;

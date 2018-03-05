@@ -96,7 +96,7 @@ class Locale {
 
             if(this.language == 'en') {
                 var string = skey;
-            } else if(this.translations[skey] != null) {
+            } else if(this.translations != null && this.translations[skey] != null) {
                 string = this.translations[skey];
             } else {
                 if(this.language != 'en') {

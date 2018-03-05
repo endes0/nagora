@@ -36,7 +36,7 @@ class Macro {
     }
     for (name in sys.FileSystem.readDirectory('nagora/app/views')) {
       var className : String = hhp.TemplateBuilder.createClass('nagora/app/views/' + name, pos, parent);
-      map.push(macro $v{name} => $v{haxe.macro.Context.parse('new $className()', pos)});
+      map.push(macro $v{name} => $e{haxe.macro.Context.parse('new $className()', pos)});
     }
     return macro $a{map};
   }
@@ -53,7 +53,7 @@ class Macro {
       var name : String = dir_name.toLowerCase();
       if( sys.FileSystem.exists('nagora/app/widgets/' + dir_name + '/' + name + '.tpl') ) {
         var className : String = hhp.TemplateBuilder.createClass('nagora/app/widgets/' + dir_name + '/' + name + '.tpl', pos, parent);
-        map.push(macro $v{'app.widgets.' + dir_name} => $v{haxe.macro.Context.parse('new $className()', pos)});
+        map.push(macro $v{'app.widgets.' + dir_name} => $e{haxe.macro.Context.parse('new $className()', pos)});
       }
     }
     return macro $a{map};

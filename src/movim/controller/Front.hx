@@ -11,8 +11,8 @@ class Front extends Base {
 
     public function loadController(request:String) : Base {
       switch request {
-      /*case 'about': return new AboutController();
-      case 'account': return new AccountController();
+      case 'about': return new AboutController();
+      /*case 'account': return new AccountController();
       case 'accountnext': return new AccountnextController();
       case 'admin': return new AdminController();
       case 'adminlogin': return new AdminloginController();
@@ -63,27 +63,22 @@ class Front extends Base {
 
         //Cookie.refresh();
 
-        if (Reflect.hasField(c, 'load')) {
-            c.name = request;
-            //TODO c.load();
+        c.name = request;
+        c.load();
+        c.checkSession();
+        c.dispatch();
+
+        // If the controller ask to display a different page
+        if (request != c.name) {
+            var new_name = c.name;
+            c = this.loadController(new_name);
+            c.name = new_name;
             Reflect.callMethod(c, Reflect.field(c, 'load'), []);
-            c.checkSession();
-            //TODO c.dispatch();
             Reflect.callMethod(c, Reflect.field(c, 'dispatch'), []);
-
-            // If the controller ask to display a different page
-            if (request != c.name) {
-                var new_name = c.name;
-                c = this.loadController(new_name);
-                c.name = new_name;
-                Reflect.callMethod(c, Reflect.field(c, 'load'), []);
-                Reflect.callMethod(c, Reflect.field(c, 'dispatch'), []);
-            }
-
-            // We display the page !
-            c.display();
-        } else {
-          Main.log.log(easylog.EasyLogger.Error, "Could not call the load method on the current controller");
         }
+
+        // We display the page !
+        c.display();
+
     }
 }

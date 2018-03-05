@@ -60,7 +60,7 @@ class Jsinimanager
 
     // Regex
     var regexp = {
-      section: ~/^\[([^]]*)\]$/,
+      section: ~/^\[([^\]]*)\]$/,
       param: ~/^([^=]+)=(.*)$/,
       comment: ~/^;.*$/,
       blank: ~/^[ \n\r\t]$/

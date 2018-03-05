@@ -65,6 +65,16 @@ class Builder {
         this._public = _public;
 
         var template : Dynamic = Macro.prebuild_all_tmp(movim.template.Builder).get(this._view+'.tpl'); //hhp.Hhp.render('views/' + template, null, this);
+        template.theme = this.theme;
+        template._view = this._view;
+        template._title = this._title;
+        template._content = this._content;
+        template.user = this.user;
+        template.css = this.css;
+        template._scripts = this._scripts;
+        template._dir = this._dir;
+        template._public = this._public;
+
         var outp : String = template.execute();
 
         var scripts = this.printCss();
@@ -72,7 +82,7 @@ class Builder {
             scripts += this.printScripts();
         }
 
-        outp = StringTools.replace('<%scripts%>', outp, scripts);
+        outp = StringTools.replace(outp, '<%scripts%>', scripts);
 
         return outp;
     }
@@ -101,11 +111,13 @@ class Builder {
      * Displays the current title.
      */
     public function dir() : Void {
-        this.user.reload(true);
-        var lang = this.user.getConfig('language');
+        if( this.user != null ) {
+          this.user.reload(true);
+          var lang = this.user.getConfig('language');
 
-        if(['ar', 'he', 'fa'].indexOf(lang) != null) {
-            this._dir = 'rtl';
+          if(['ar', 'he', 'fa'].indexOf(lang) != null) {
+              this._dir = 'rtl';
+          }
         }
 
         this.echo(this._dir);

@@ -52,7 +52,7 @@ class Route extends Base {
         }
 
         if (this._page == null || this._page == 'main' || this._page == 'main.html') {
-            this._page = 'news';
+            this._page = 'about';
         }
 
         if (this._routes[this._page] == null) {
