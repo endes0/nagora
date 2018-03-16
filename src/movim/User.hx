@@ -35,7 +35,7 @@ class User {
                 }
             }
 
-            var ser : Server = haxe.Unserializer.run(Main.config['Caps'][session['host']]);
+            var ser : Server = if(Main.config['Caps'][session['host']] != null) haxe.Unserializer.run(Main.config['Caps'][session['host']]) else null;
           if (ser != null) {
                 this.caps = ser.features;
             }

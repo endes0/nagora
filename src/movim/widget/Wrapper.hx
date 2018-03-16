@@ -60,8 +60,8 @@ class Wrapper {
      */
     public function loadWidget(name : String, register:Bool=false) : Base {
         var class_name : Class<Dynamic> = null;
-        if(Type.resolveClass('app.widgets.' + name) != null) {
-            class_name = Type.resolveClass('app.widgets.' + name);
+        if(Type.resolveClass('app.widgets.' + name.toLowerCase() + '.' + name) != null) {
+            class_name = Type.resolveClass('app.widgets.' + name.toLowerCase() + '.' + name);
         } else {
             throw movim.i18n.Locale.start().translate('error.widget_load_error') + name;
         }

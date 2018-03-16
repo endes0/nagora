@@ -6,15 +6,16 @@ import hhp.Hhp;
 
 @:autoBuild(hhp.TemplateBuilder.build())
 class Builder {
-    private var theme : String = 'movim';
-    private var _view : String = '';
-    private var _title : String = '';
-    private var _content : String = '';
-    private var user : User;
-    private var css : Array<String> = [];
-    private var _scripts : Array<String> = [];
-    private var _dir : String = 'ltr';
-    private var _public : Bool;
+    //TODO: limit access to class builder
+    public var theme : String = 'movim';
+    public var _view : String = '';
+    public var _title : String = '';
+    public var _content : String = '';
+    public var user : User;
+    public var css : Array<String> = [];
+    public var _scripts : Array<String> = [];
+    public var _dir : String = 'ltr';
+    public var _public : Bool;
 
     private var _buffer : String = '';
     private var _isLayoutDisabled : Bool = false;
@@ -25,6 +26,10 @@ class Builder {
      */
     public function new(?user : User) {
         this.user = user;
+
+        if( Main.config['Config']['theme'] == null ) {
+          Main.config['Config']['theme'] = 'material';
+        }
         this.theme = Main.config['Config']['theme'];
     }
 
@@ -38,7 +43,7 @@ class Builder {
      * @param return optionally returns the link instead of printing it if set to true
      */
     public function linkFile(file : String, _return:Bool=false) : String {
-        var path = StringTools.urlEncode('themes/' + this.theme + '/' + file);
+        var path = 'themes/' + this.theme + '/' + file;
 
         if(_return) {
             return path;
@@ -100,7 +105,7 @@ class Builder {
      */
     public function title() : Void {
         var widgets = Wrapper.getInstance();
-        if(widgets.title != '') {
+        if(widgets.title != '' && widgets.title != null) {
             _title += ' - ' + widgets.title;
         }
 

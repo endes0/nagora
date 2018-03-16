@@ -29,6 +29,7 @@ class Base {
 
     private var _buffer : String = '';
     private var _isLayoutDisabled : Bool = false;
+    private var data : Dynamic;
 
     /**
      * Initialises Widget stuff.
@@ -119,7 +120,8 @@ class Base {
      */
     public function draw() : String {
         this.display();
-        var out : String = this.view[this.name].execute();
+        var view : Base = this.view[this.name];
+        var out : String = view.execute();
         return StringTools.trim(out);
     }
 
@@ -143,7 +145,7 @@ class Base {
      * @param file is the file's name to make up the path for.
      * @param fspath is optional, returns the OS path if true, the URL by default.
      */
-     private function respath(file : String, fspath:Bool=false, parent:Bool=false) : String {
+     private function respath(file : String, fspath:Bool=true, parent:Bool=false) : String {
        var folder : String = '';
         if(parent == false) {
             folder = Type.getClassName(Type.getClass(this));
