@@ -11,3 +11,4 @@ class PictureController extends Base {
 
     override public function dispatch() : Void {
     }
+}
