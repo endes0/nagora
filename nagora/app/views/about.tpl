@@ -5,7 +5,7 @@
                 <ul class="list middle">
                     <li>
                         <span class="primary active icon gray">
-                            <a href="<?hhp this.echo(movim.Route.urlize('main')); ?>">
+                            <a href="#" onclick="Main.change_page('main')">
                                 <i class="zmdi zmdi-arrow-left"></i>
                             </a>
                         </span>

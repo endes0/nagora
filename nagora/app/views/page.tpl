@@ -8,7 +8,7 @@
 
     <?php $this->meta(); ?>
 
-    <meta name="application-name" content="Movim">
+    <meta name="application-name" content="Nagora">
     <link rel="shortcut icon" href="<?hhp this.linkFile('img/favicon.ico');?>" />
     <link rel="icon" type="image/png" href="<?hhp this.linkFile('img/app/48.png');?>" sizes="48x48">
     <link rel="icon" type="image/png" href="<?hhp this.linkFile('img/app/96.png');?>" sizes="96x96">
@@ -67,9 +67,9 @@
                 </li>
             </ul>
         </div>
-        <?hhp this.widget('Dialog');?>
-        <?hhp this.widget('Drawer');?>
-        <?hhp this.widget('Preview');?>
+        <?/hhp this.widget('Dialog');?>
+        <?/hhp this.widget('Drawer');?>
+        <?/hhp this.widget('Preview');?>
         <?hhp this.content();?>
     </body>
 </html>

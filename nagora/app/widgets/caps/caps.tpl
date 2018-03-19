@@ -29,23 +29,23 @@
             <tr>
                 <th>Client</th>
                 <th>Count</th>
-                {loop="$nslist"}
-                    <th><a href="{$c->route('about', $key, 'xep_widget')}">{$key}</a></th>
-                {/loop}
+                <?hpp for(key in this.data.nslist.keys()) { ?>
+                    <th><a href="#" onclick="Main.change_page('about', [<?hpp this.echo(key) ?>], 'xep_widget')"><?hpp this.echo(key) ?></a></th>
+                <?hpp } ?>
             </tr>
         </thead>
 
         <tbody>
-            {loop="$table"}
+            <?hpp for(key in this.data.table.keys()) { ?>
             <tr>
-                <td title="{$key}">{$key}</td>
-                <td>{$value|count}</td>
-                {$client = $value}
-                {loop="$nslist"}
-                    {$c->isImplemented($client, $key)}
-                {/loop}
+                <td title="<?hpp this.echo(key) ?>"><?hpp this.echo(key) ?></td>
+                <td><?hpp this.echo(this.data.table[key].length) ?></td>
+                <?hpp var client = this.data.table[key] ?>
+                <?hpp for(key in this.data.nslist.keys()) { ?>
+                    <?hpp this.isImplemented(client, key); ?>
+                <?hpp } ?>
             </tr>
-            {/loop}
+            <?hpp } ?>
         </tbody>
     </table>
 </div>
