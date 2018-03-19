@@ -56,6 +56,8 @@ class Main {
   public static var timezone : datetime.Timezone;
   public static var log : easylog.EasyLogger;
 
+  public static var post_display : Array<Void -> Void> = [];
+
   public static var session_id : String;
   public static var config(default, set) : Map<String,Map<String,String>>;
   static function set_config(v:Map<String,Map<String,String>>) : Map<String,Map<String,String>> {
@@ -94,6 +96,37 @@ class Main {
     #if js
     js.Browser.document.getElementsByTagName('html')[0].innerHTML = content;
     #end
+
+    for( func in post_display ) {
+      func();
+    }
+    post_display = [];
+  }
+
+  @:expose public static function openurl( url : String ) : Void {
+    var start = '';
+    if( Sys.systemName() == 'Mac' ) {
+      start = 'open';
+    } else if( Sys.systemName() == 'Windows' ) {
+      start = 'start';
+    } else {
+      start = 'xdg-open';
+    }
+
+    Sys.command(start, [url]);
+  }
+
+  @:expose public static function change_page( page : String, ?params:Array<String>, ?tab:String ) : Void {
+    #if hxnodejs
+      if( params != null ) {
+        js.Browser.location.pathname = page + '/' + params.join('/');
+      }
+
+      js.Browser.location.hash = tab;
+    #end
+
+    var rqst = new Front();
+    rqst.handle(page);
   }
 
   static function main() {

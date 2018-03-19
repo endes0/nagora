@@ -40,12 +40,16 @@ class Route extends Base {
             super();
     }
 
-    public function find() : String {
+    public function find(?page:String) : String {
         //this.fix(php.Web.getParams(), _SERVER.get('QUERY_STRING'));
 
-        this._page = #if nodejs
-                        js.Browser.location.pathname.split('/').pop();
-                     #end
+        this._page = if( page != null ) {
+                        this._page = page;
+                      } else {
+                        #if nodejs
+                          js.Browser.location.pathname.split('/').pop();
+                        #end
+                      }
 
         if (this._routes[this._page] != null) {
             var route = this._routes[this._page];

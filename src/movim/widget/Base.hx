@@ -2,6 +2,7 @@ package movim.widget;
 
 //use Rain\Tpl;
 import movim.controller.Ajax;
+import movim.i18n.Locale;
 import movim.User;
 
 @:autoBuild(hhp.TemplateBuilder.build())
@@ -204,7 +205,7 @@ class Base {
      * @brief Adds a CSS file to this widget.
      */
     private function addcss(filename : String) : Void {
-        this.css.push(this.respath(filename));
+        this.css.push('themes/' + Main.config['Config']['theme'] + '/css/' + filename);
     }
 
     /**

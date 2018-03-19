@@ -4,9 +4,9 @@ import movim.Route;
 import app.controllers.*;
 
 class Front extends Base {
-    public function handle() : Void {
+    public function handle(?page:String) : Void {
         var r = new Route();
-        this.runRequest(r.find());
+        this.runRequest(r.find(page));
     }
 
     public function loadController(request:String) : Base {

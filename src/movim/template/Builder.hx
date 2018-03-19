@@ -120,7 +120,7 @@ class Builder {
           this.user.reload(true);
           var lang = this.user.getConfig('language');
 
-          if(['ar', 'he', 'fa'].indexOf(lang) != null) {
+          if(['ar', 'he', 'fa'].indexOf(lang) != -1) {
               this._dir = 'rtl';
           }
         }
