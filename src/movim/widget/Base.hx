@@ -18,8 +18,7 @@ class Base {
     private var _view : String;
     private var view : Map<String, Dynamic>;
 
-    public var events : Map<String,Array<String>> = new Map();
-    public var filters : Map<String, String> = new Map();
+    public var events : Map<String,Array<{func: String -> Void, filter: String}>> = new Map();
 
     // Meta tags
     public var title : String;
@@ -240,15 +239,12 @@ class Base {
      * @param $function The function to call
      * @param $filter Only call this function if the session notif_key is good
      */
-    private function registerEvent(type : String, func : String, ?filter : String) {
+    private function registerEvent(type : String, func : String -> Void, ?filter : String) {
+        var obj = {func: func, filter: filter};
         if(this.events[type] == null) {
-            this.events[type] = [func];
+            this.events[type] = [obj];
         } else {
-            this.events[type].push(func);
-        }
-
-        if(filter != null) {
-            this.filters[func] = filter;
+            this.events[type].push(obj);
         }
     }
 

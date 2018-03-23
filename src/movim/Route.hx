@@ -56,7 +56,7 @@ class Route extends Base {
         }
 
         if (this._page == null || this._page == 'main' || this._page == 'main.html') {
-            this._page = 'about';
+            this._page = 'login';
         }
 
         if (this._routes[this._page] == null) {

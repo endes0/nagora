@@ -12,7 +12,7 @@ class Front extends Base {
     public function loadController(request:String) : Base {
       switch request {
       case 'about': return new AboutController();
-      /*case 'account': return new AccountController();
+      case 'account': return new AccountController();
       case 'accountnext': return new AccountnextController();
       case 'admin': return new AdminController();
       case 'adminlogin': return new AdminloginController();
@@ -36,7 +36,7 @@ class Front extends Base {
       case 'share': return new ShareController();
       case 'system': return new SystemController();
       case 'tag': return new TagController();
-      case 'visio': return new VisioController(); */
+      case 'visio': return new VisioController();
       case _:
         Main.log.log('Error', "Requested controller " + request + "Controller doesn't exist.");
         throw 'Error loading Controller, see logs.';

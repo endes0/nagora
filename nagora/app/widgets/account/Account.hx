@@ -6,9 +6,9 @@ class Account extends movim.widget.Base {
     override public function load() : Void {
         //TODO: js to haxe
         this.addjs('account.js');
-        this.registerEvent('register_changepassword_handle', 'onPasswordChanged');
-        this.registerEvent('register_remove_handle', 'onRemoved');
-        this.registerEvent('register_get_handle', 'onRegister', 'account');
+        //this.registerEvent('register_changepassword_handle', 'onPasswordChanged');
+        //this.registerEvent('register_remove_handle', 'onRemoved');
+        //this.registerEvent('register_get_handle', 'onRegister', 'account');
     }
 
     public function onPasswordChanged() : Void {

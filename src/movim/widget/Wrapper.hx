@@ -129,28 +129,28 @@ class Wrapper {
     public function iterate(key : String, data : String) {
         if(this._events.exists(key)) {
             for(widget_name in this._events[key]) {
-                var widget : Base = Type.createInstance(Type.resolveClass('app.widgets.' + widget_name), [true]);
+                var widget : Base = Type.createInstance(Type.resolveClass('app.widgets.' + widget_name.toLowerCase() + '.' + widget_name), [true]);
                 if(widget.events.exists(key)) {
                     for(method in widget.events[key]) {
                         /*
                          * We check if the method need to be called if the
                          * session notifs_key is set to a specific value
                          */
-                        if(widget.filters != null && widget.filters.exists(method)) {
+                        if(method.filter != null) {
                             var session = Session.start();
                             var notifs_key = session.get('notifs_key');
 
                             if(notifs_key == 'blurred') {
-                              Reflect.callMethod(widget, Reflect.field(widget, method), [data]);
+                              method.func(data);
                             } else {
                                 var explode = notifs_key.split('|');
                                 var notif_key = explode[0];
-                                if(notif_key == widget.filters[method]) {
-                                  Reflect.callMethod(widget, Reflect.field(widget, method), [data]);
+                                if(notif_key == method.filter) {
+                                  method.func(data);
                                 }
                             }
                         } else {
-                          Reflect.callMethod(widget, Reflect.field(widget, method), [data]);
+                          method.func(data);
                         }
                     }
                 }

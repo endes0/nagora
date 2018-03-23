@@ -23,7 +23,7 @@ class Session {
     /**
      * Gets a session variable. Returns false if doesn't exist.
      */
-    public function get(varname: String) : String {
+    public function get(varname: String) : Dynamic {
         if (this.values.exists(varname)) {
             return haxe.Unserializer.run(haxe.crypto.Base64.decode(this.values[varname]).toString());
         }
@@ -33,7 +33,7 @@ class Session {
     /**
      * Sets a session variable. Returns $value.
      */
-    public function set(varname: String, value: String) : String {
+    public function set(varname: String, value: Dynamic) : String {
         var value = haxe.crypto.Base64.encode(haxe.io.Bytes.ofString(haxe.Serializer.run(value)));
         this.values[varname] = value;
 
